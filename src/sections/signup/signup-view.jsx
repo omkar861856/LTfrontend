@@ -184,7 +184,7 @@ export default function SignUpView() {
   const theme = useTheme();
 
   const handleClick = () => {
-    router.push('/');
+    router.push('/signin');
   };
 
   // const renderForm = (
