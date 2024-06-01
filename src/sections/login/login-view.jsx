@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as yup from 'yup';
+import { useState } from 'react';
 import { useFormik } from 'formik';
-import { useState, useContext } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,7 +19,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { LoginContext } from 'src/app';
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
@@ -40,13 +39,12 @@ const validationSchema = yup.object().shape({
 const RenderForm = () => {
   const router = useRouter();
 
-  const { login, setLogin } = useContext(LoginContext);
 
   const dateObj = new Date();
-  const month = dateObj.getUTCMonth() + 1; // months from 1-12
-  const day = dateObj.getUTCDate();
-  const year = dateObj.getUTCFullYear();
-  const signInTime = dateObj.toLocaleTimeString();
+  // const month = dateObj.getUTCMonth() + 1; // months from 1-12
+  // const day = dateObj.getUTCDate();
+  // const year = dateObj.getUTCFullYear();
+  // const signInTime = dateObj.toLocaleTimeString();
 
   const [showPassword, setShowPassword] = useState(false);
   const [backendResponse, setBackendResponse] = useState('');
@@ -57,6 +55,7 @@ const RenderForm = () => {
       email: '',
       password: '',
       login_location: '',
+      
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -73,10 +72,7 @@ const RenderForm = () => {
             email,
             password,
             login_location,
-            month,
-            day,
-            year,
-            signInTime,
+            login_time: dateObj,
           })
           .then((response) => {
             setBackendResponse(response.data.msg);
@@ -84,10 +80,9 @@ const RenderForm = () => {
             resetForm();
             if (response.data.msg === 'logged in') {
               window.localStorage.setItem('token', response.data.token);
-              window.localStorage.setItem('login', 'guest');
-              setLogin(true);
+              window.localStorage.setItem('login', true);
               router.push('/dashboard');
-              alert({ login, backendResponse, token });
+              alert({ backendResponse, token });
             }
           })
           .catch((error) => alert(error, 'error block activated'));

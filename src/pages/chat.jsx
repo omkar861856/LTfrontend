@@ -1,16 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 
-import { InvoicesView } from 'src/sections/invoices';
+import { ChatView } from 'src/sections/chat';
 // ------------------providing metadata----------------------------------------------------
 
-export default function InvoicesPage() {
+export default function ChatPage() {
   return (
     <>
       <Helmet>
-        <title> Invoices | LT </title>
+        <title> Chat | LT </title>
       </Helmet>
 
-      <InvoicesView />
+      <ChatView />
     </>
   );
 }

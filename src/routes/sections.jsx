@@ -12,6 +12,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const SignUpPage = lazy(() => import('src/pages/signup'));
 export const NewEnquireyPage = lazy(() => import('src/pages/new-enquirey'));
 export const InvoicesPage = lazy(() => import('src/pages/invoices'));
+export const ChatPage = lazy(() => import('src/pages/chat'));
 
 // ----------------------------------------------------------------------
 
@@ -31,16 +32,17 @@ export default function UserRouter() {
         { path: 'user', element: <UserPage /> },
         { path: 'courses', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'invoices', element: <InvoicesPage /> }
+        { path: 'invoices', element: <InvoicesPage /> },
+        { path: 'chat', element: <ChatPage /> }
       ],
       path: '/dashboard',
     },
     {
-      path: '/',
+      path: '/signin',
       element: <LoginPage />,
     },
     {
-      path: '/signup',
+      path: '/',
       element: <SignUpPage />,
     },
     {

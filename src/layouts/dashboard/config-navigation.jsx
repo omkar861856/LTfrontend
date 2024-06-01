@@ -34,7 +34,12 @@ const navConfig = [
   },
   {
     title: 'invoices',
-    path: '/dashboard/invoice',
+    path: '/dashboard/invoices',
+    icon: icon('ic_form'),
+  },
+  {
+    title: 'chat',
+    path: '/dashboard/chat',
     icon: icon('ic_form'),
   },
   // ==================  Not Found and Login routes  ===========================

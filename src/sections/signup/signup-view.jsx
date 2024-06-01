@@ -29,6 +29,8 @@ import Iconify from 'src/components/iconify';
 // ================= validation schema ==================
 
 const validationSchema = yup.object().shape({
+  name: yup.string().label('Name').required(),
+
   email: yup.string().label('Email').required().email(),
 
   password: yup.string().label('This').required(),
@@ -41,7 +43,6 @@ const validationSchema = yup.object().shape({
 
 const RenderForm = () => {
 
-  const [radioValue, setRadioValue] =  useState("")
 
   const backendUrl = 'https://learnmore-backend-chi.vercel.app';
 
@@ -53,6 +54,7 @@ const RenderForm = () => {
 
   const formik = useFormik({
     initialValues: {
+      name: '',
       email: '',
       password: '',
       confirm_password: '',
@@ -60,7 +62,7 @@ const RenderForm = () => {
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      const { email, password, role_radio } = values;
+      const { name, email, password, role_radio } = values;
       setBackendResponse(null);
       setTimeout(() => {
         //   alert(JSON.stringify({email:email,password:password}, null, 2));
@@ -70,6 +72,7 @@ const RenderForm = () => {
         const url = `${backendUrl}/signup`;
         const signupaxios = await axios
           .post(url, {
+            name,
             email,
             password,
             role_radio,
@@ -79,7 +82,7 @@ const RenderForm = () => {
             resetForm();
             console.log(backendResponse)
             if (response.data.msg === 'User added') {
-              router.push('/');
+              router.push('/signin');
             }
           })
           .catch((error) => alert(error, 'error block activated'));
@@ -93,6 +96,17 @@ const RenderForm = () => {
     <div>
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3} mb={3}>
+        <TextField
+            fullWidth
+            id="name"
+            name="name"
+            label="Name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+          />
           <TextField
             fullWidth
             id="email"
@@ -151,7 +165,7 @@ const RenderForm = () => {
 
           >
             <FormControlLabel value="student" control={<Radio />} label="Student" />
-            <FormControlLabel value="mentor" control={<Radio />} label="Mentor" />
+            <FormControlLabel default value="mentor" control={<Radio />} label="Mentor" />
             <FormControlLabel value="admin" control={<Radio />} label="Admin" />
           </RadioGroup>
 

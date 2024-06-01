@@ -23,6 +23,7 @@ export default function BlogView() {
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
           New Post
         </Button>
+        <a rel='noreferrer' target='_blank' href='https://quilljs.com/playground/form'>text editor</a>
       </Stack>
 
       <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">

@@ -28,7 +28,7 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
+            title="All Enquirey's"
             total={714000}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
@@ -59,6 +59,21 @@ export default function AppView() {
             total={234}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+          />
+        </Grid>
+
+        
+
+        <Grid xs={12} md={6} lg={8}>
+          <AppTasks
+            title="Tasks"
+            list={[
+              { id: '1', name: 'Create FireStone Logo' },
+              { id: '2', name: 'Add SCSS and JS files if required' },
+              { id: '3', name: 'Stakeholder Meeting' },
+              { id: '4', name: 'Scoping & Estimations' },
+              { id: '5', name: 'Sprint Showcase' },
+            ]}
           />
         </Grid>
 
@@ -212,18 +227,7 @@ export default function AppView() {
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
-          <AppTasks
-            title="Tasks"
-            list={[
-              { id: '1', name: 'Create FireStone Logo' },
-              { id: '2', name: 'Add SCSS and JS files if required' },
-              { id: '3', name: 'Stakeholder Meeting' },
-              { id: '4', name: 'Scoping & Estimations' },
-              { id: '5', name: 'Sprint Showcase' },
-            ]}
-          />
-        </Grid>
+        
       </Grid>
     </Container>
   );
