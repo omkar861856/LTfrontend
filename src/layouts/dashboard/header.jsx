@@ -11,9 +11,9 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import { bgBlur } from 'src/theme/css';
 
+import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
-import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
 import AccountPopover from './common/account-popover';
 import LanguagePopover from './common/language-popover';
@@ -34,7 +34,9 @@ export default function Header({ onOpenNav }) {
         </IconButton>
       )}
 
-      <Searchbar />
+      {/* <Searchbar /> */}
+      <Logo sx={{ mt: 3, ml: 4 }} />
+
 
       <Box sx={{ flexGrow: 1 }} />
 

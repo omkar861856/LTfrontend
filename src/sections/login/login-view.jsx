@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,9 +20,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
+import CircularIndeterminate from 'src/utils/loading-spinner';
+
 import { bgGradient } from 'src/theme/css';
 
-import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -39,7 +41,6 @@ const validationSchema = yup.object().shape({
 const RenderForm = () => {
   const router = useRouter();
 
-
   const dateObj = new Date();
   // const month = dateObj.getUTCMonth() + 1; // months from 1-12
   // const day = dateObj.getUTCDate();
@@ -47,15 +48,18 @@ const RenderForm = () => {
   // const signInTime = dateObj.toLocaleTimeString();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [backendResponse, setBackendResponse] = useState('');
   const [token, setToken] = useState('');
+  console.log(token)
+
+
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
       login_location: '',
-      
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -63,11 +67,12 @@ const RenderForm = () => {
       setBackendResponse(null);
       setTimeout(() => {
         //   alert(JSON.stringify({email:email,password:password}, null, 2));
+        setLoading(true);
         setSubmitting(false);
-      }, 400);
+      }, 0);
       (async () => {
         const url = `${backendUrl}/signin`;
-        const signupaxios = await axios
+        await axios
           .post(url, {
             email,
             password,
@@ -75,18 +80,20 @@ const RenderForm = () => {
             login_time: dateObj,
           })
           .then((response) => {
-            setBackendResponse(response.data.msg);
-            setToken(response.data.token);
             resetForm();
             if (response.data.msg === 'logged in') {
+              setBackendResponse(response.data.msg);
+              setToken(response.data.token);
               window.localStorage.setItem('token', response.data.token);
               window.localStorage.setItem('login', true);
+              setLoading(false);
               router.push('/dashboard');
-              alert({ backendResponse, token });
             }
           })
-          .catch((error) => alert(error, 'error block activated'));
-        console.log(signupaxios);
+          .catch((error) => {
+            resetForm();
+            setBackendResponse('User not found');
+          });
       })();
       // alert(JSON.stringify({email,password, login_location}, null, 2));
     },
@@ -146,16 +153,40 @@ const RenderForm = () => {
             <FormControlLabel value="wfh" control={<Radio />} label="WFH" />
           </RadioGroup>
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            color="inherit"
-            // onClick={handleClick}
-          >
-            Sign In
-          </LoadingButton>
+          {backendResponse !== 'logged in' && loading === false ? (
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              color="inherit"
+              // onClick={handleClick}
+            >
+              Sign In
+            </LoadingButton>
+          ) : (
+            <div>
+              {backendResponse !== 'User not found' ? (
+                <LoadingButton variant="outlined">
+                  <CircularIndeterminate />
+                </LoadingButton>
+              ) : (
+                <div>
+                  <p style={{"color":"red"}}>{backendResponse} backend response</p>                  
+                  <LoadingButton
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    color="inherit"
+                    // onClick={handleClick}
+                  >
+                    Sign In
+                  </LoadingButton>
+                </div>
+              )}
+            </div>
+          )}
         </Stack>
       </form>
     </div>
@@ -175,14 +206,6 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      <Logo
-        sx={{
-          position: 'fixed',
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
-
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -239,7 +262,6 @@ export default function LoginView() {
           </Divider> */}
 
           {RenderForm()}
-          
         </Card>
       </Stack>
     </Box>

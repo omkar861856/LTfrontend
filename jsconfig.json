@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": "./src", // Update the baseUrl to the root directory of your source files
+    "paths": {
+      "*": ["*"] // Add any specific path mappings you need for your project
+    }
   }
 }

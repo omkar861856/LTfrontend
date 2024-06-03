@@ -26,8 +26,9 @@ export default defineConfig({
       },
     ],
   },
+  // add hmr due to toastify error
   server: {
-    port: 3030,
+    port: 3030,    
   },
   preview: {
     port: 3030,

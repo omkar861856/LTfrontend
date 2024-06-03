@@ -23,7 +23,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
 
-import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
 // ================= validation schema ==================
@@ -82,7 +81,7 @@ const RenderForm = () => {
             resetForm();
             console.log(backendResponse)
             if (response.data.msg === 'User added') {
-              router.push('/signin');
+              router.push('/');
             }
           })
           .catch((error) => alert(error, 'error block activated'));
@@ -184,7 +183,7 @@ export default function SignUpView() {
   const theme = useTheme();
 
   const handleClick = () => {
-    router.push('/signin');
+    router.push('/');
   };
 
   // const renderForm = (
@@ -220,13 +219,7 @@ export default function SignUpView() {
         height: 1,
       }}
     >
-      <Logo
-        sx={{
-          position: 'fixed',
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
+      
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card

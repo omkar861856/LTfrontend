@@ -110,7 +110,10 @@ export default function AccountPopover() {
           disableRipple
           disableTouchRipple
           onClick={() => {
+            window.localStorage.setItem('login', false)
+
             router.push('/');
+            
             handleClose();
           }}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}

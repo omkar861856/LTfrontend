@@ -33,16 +33,12 @@ export default function UserRouter() {
         { path: 'courses', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'invoices', element: <InvoicesPage /> },
-        { path: 'chat', element: <ChatPage /> }
+        { path: 'chat', element: <ChatPage /> },
       ],
       path: '/dashboard',
-    },
+    },    
     {
-      path: '/signin',
-      element: <LoginPage />,
-    },
-    {
-      path: '/',
+      path: '/signup',
       element: <SignUpPage />,
     },
     {
@@ -52,15 +48,14 @@ export default function UserRouter() {
     {
       path: '*',
       element: <Navigate to="/404" replace />,
-    },    
+    },
   ]);
 
   return routes;
 }
 
-export function NormalRouter(){
-
-  const routes = useRoutes([    
+export function NormalRouter() {
+  const routes = useRoutes([
     {
       path: '/',
       element: <LoginPage />,
@@ -76,11 +71,8 @@ export function NormalRouter(){
     {
       path: '*',
       element: <Navigate to="/404" replace />,
-    },    
+    },
   ]);
 
   return routes;
-  
 }
-
-

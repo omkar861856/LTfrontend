@@ -3,20 +3,20 @@ import { forwardRef } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { useTheme } from '@mui/material/styles';
+// import { useTheme } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
 // ----------------------------------------------------------------------
 
 const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
-  const theme = useTheme();
+  // const theme = useTheme();
 
-  const PRIMARY_LIGHT = theme.palette.primary.light;
+  // const PRIMARY_LIGHT = theme.palette.primary.light;
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  // const PRIMARY_MAIN = theme.palette.primary.main;
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  // const PRIMARY_DARK = theme.palette.primary.dark;
 
   // OR using local (public folder)
   // -------------------------------------------------------
@@ -40,7 +40,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
       }}
       {...other}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
+      {/* <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
         <defs>
           <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">
             <stop offset="0%" stopColor={PRIMARY_DARK} />
@@ -72,11 +72,11 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
             d="M450 384c26.509 0 48-21.491 48-48s-21.491-48-48-48-48 21.491-48 48 21.491 48 48 48"
           />
         </g>
-      </svg>
+      </svg> */}
 
       {/* LT svg file - edit accorDinglYY */}
 
-      {/* <svg
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         version="1.0"
         width="42.667"
@@ -87,7 +87,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
           d="M10.8 10.5c-.8 1.8-1.4 2.2-1.9 1.3-.4-.7-1.1-1-1.4-.6-.4.3-.1 1.4.5 2.5 1.7 2.6-.3 7.3-3.1 7.3-1.1 0-1.9.5-1.7 1.2.5 1.4 10.5 2 11.3.7.4-.5-.8-.9-2.5-.9-3 0-3.2-.2-2.6-2.8.4-1.5 1.5-3.2 2.4-3.9 3.5-2.5 4.2-3.4 4.2-5.3 0-3-3.8-2.6-5.2.5m3.2.6c-.7 1.1-1.4 1.8-1.7 1.5-.8-.8.5-3.6 1.7-3.6.7 0 .7.6 0 2.1M17.5 9c-.4.6.5 1 1.9 1s2.6.1 2.6.2c0 .2-.9 2.7-2 5.6-2.1 5.5-2.5 8.2-1.2 8.2.4 0 1.5-3.1 2.5-6.8 1.5-5.7 2.2-7 4.5-7.9 2.5-1 2.3-1.1-2.5-1.2-2.8-.1-5.5.3-5.8.9"
           fill="#cb1010"
         />
-      </svg> */}
+      </svg>
     </Box>
   );
 
@@ -96,7 +96,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   }
 
   return (
-    <Link component={RouterLink} href="/" sx={{ display: 'contents' }}>
+    <Link component={RouterLink} href="/dashboard" sx={{ display: 'contents' }}>
       {logo}
     </Link>
   );
