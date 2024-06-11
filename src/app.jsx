@@ -48,6 +48,10 @@ function LogInRouter(role) {
       result = <StudentRouter />;
 
       break;
+      case 'loggedout':
+      result = <NormalRouter />;
+
+      break;
 
     default: 
     result = <div>nada</div>    

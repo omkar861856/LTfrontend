@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialUserState = {
   user: {},
   isLoggedIn: false,
-  role:"",
+  role:"loggedout",
   token:null,
   login_location:null,
   login_time:null,
