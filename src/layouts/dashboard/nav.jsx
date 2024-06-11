@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -19,14 +20,27 @@ import { account } from 'src/_mock/account';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
-import navConfig from './config-navigation';
+import navConfig, { navMentorConfig, navStudentConfig } from './config-navigation';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
 
+  const user = useSelector((state) => state.user);
+
   const upLg = useResponsive('up', 'lg');
+
+  let NaviConfig; 
+  if(user.role === 'admin') {
+    NaviConfig = navConfig;
+  }
+  else if(user.role === 'student'){
+    NaviConfig = navStudentConfig;
+  }
+  else if (user.role === 'mentor'){
+    NaviConfig = navMentorConfig;
+  }
 
   useEffect(() => {
     if (openNav) {
@@ -51,10 +65,10 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">{user.name}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
+          {user?.role}
         </Typography>
       </Box>
     </Box>
@@ -62,7 +76,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
+      {NaviConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>

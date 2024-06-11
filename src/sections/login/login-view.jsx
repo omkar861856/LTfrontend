@@ -3,9 +3,11 @@ import * as yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch , useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Radio from '@mui/material/Radio';
 import TextField from '@mui/material/TextField';
@@ -23,9 +25,9 @@ import { useRouter } from 'src/routes/hooks';
 import CircularIndeterminate from 'src/utils/loading-spinner';
 
 import { bgGradient } from 'src/theme/css';
+import { signIn } from 'src/redux/slices/userSlice';
 
 import Iconify from 'src/components/iconify';
-
 // ----------------------------------------------------------------------
 
 const backendUrl = 'https://learnmore-backend-chi.vercel.app';
@@ -38,8 +40,10 @@ const validationSchema = yup.object().shape({
   password: yup.string().label('Password').required(),
 });
 
-const RenderForm = () => {
-  const router = useRouter();
+const RenderForm = (router) => {
+  const dispatch = useDispatch();
+
+
 
   const dateObj = new Date();
   // const month = dateObj.getUTCMonth() + 1; // months from 1-12
@@ -50,20 +54,17 @@ const RenderForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backendResponse, setBackendResponse] = useState('');
-  const [token, setToken] = useState('');
-  console.log(token)
-
-
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
       login_location: '',
+      login_time: '',
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      const { email, password, login_location } = values;
+      const { email, password, login_location, login_time } = values;
       setBackendResponse(null);
       setTimeout(() => {
         //   alert(JSON.stringify({email:email,password:password}, null, 2));
@@ -83,11 +84,17 @@ const RenderForm = () => {
             resetForm();
             if (response.data.msg === 'logged in') {
               setBackendResponse(response.data.msg);
-              setToken(response.data.token);
-              window.localStorage.setItem('token', response.data.token);
-              window.localStorage.setItem('login', true);
-              setLoading(false);
-              router.push('/dashboard');
+              dispatch(
+                signIn({
+                  email,
+                  login_location,
+                  name: response.data.name,
+                  login_time,
+                  token: response.data.token,
+                  role: response.data.role,
+                })
+              );
+              setLoading(false);                 
             }
           })
           .catch((error) => {
@@ -100,7 +107,7 @@ const RenderForm = () => {
   });
 
   return (
-    <div>
+    <div>      
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3} mb={3}>
           <TextField
@@ -172,7 +179,7 @@ const RenderForm = () => {
                 </LoadingButton>
               ) : (
                 <div>
-                  <p style={{"color":"red"}}>{backendResponse} backend response</p>                  
+                  <p style={{ color: 'red' }}>{backendResponse} backend response</p>
                   <LoadingButton
                     fullWidth
                     size="large"
@@ -196,6 +203,13 @@ const RenderForm = () => {
 export default function LoginView() {
   const theme = useTheme();
 
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+
+
+  // Must use destructuring router assignmenteslint
+
+  const { push: pushToDashboard } = useRouter();
+
   return (
     <Box
       sx={{
@@ -206,6 +220,8 @@ export default function LoginView() {
         height: 1,
       }}
     >
+      {isLoggedIn === true && pushToDashboard('/dashboard')}
+
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -215,14 +231,17 @@ export default function LoginView() {
           }}
         >
           <Typography variant="h4">Sign in to Learnmore Technologies</Typography>
-
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <h3>Contact Admin Desk!!</h3>
+            <Button
+              onClick={() => {
+                pushToDashboard('/signup');
+              }}
+            >
+              Sign Up
+            </Button>
           </Typography>
-
           {/* ========Google, Facebook, Twitter Buttons========= */}
-
           {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
@@ -254,14 +273,12 @@ export default function LoginView() {
               <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
             </Button>
           </Stack> */}
-
           {/* <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               OR
             </Typography>
           </Divider> */}
-
-          {RenderForm()}
+          {RenderForm(pushToDashboard)}{' '}
         </Card>
       </Stack>
     </Box>

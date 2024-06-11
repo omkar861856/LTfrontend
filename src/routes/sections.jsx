@@ -16,7 +16,7 @@ export const ChatPage = lazy(() => import('src/pages/chat'));
 
 // ----------------------------------------------------------------------
 
-export default function UserRouter() {
+export default function AdminRouter() {
   const routes = useRoutes([
     {
       element: (
@@ -60,6 +60,79 @@ export function NormalRouter() {
       path: '/',
       element: <LoginPage />,
     },
+    {
+      path: '/signup',
+      element: <SignUpPage />,
+    },
+    {
+      path: '404',
+      element: <Page404 />,
+    },
+    {
+      path: '*',
+      element: <Navigate to="/404" replace />,
+    },
+  ]);
+
+  return routes;
+}
+
+export function StudentRouter() {
+  const routes = useRoutes([
+    {
+      element: (
+        <DashboardLayout>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      ),
+      children: [
+        { element: <IndexPage />, index: true },
+        { path: 'newenquirey', element: <NewEnquireyPage /> },
+        { path: 'courses', element: <ProductsPage /> }, 
+        { path: 'user', element: <UserPage /> }, 
+        { path: 'blog', element: <BlogPage /> },        
+        { path: 'chat', element: <ChatPage /> },
+      ],
+      path: '/dashboard',
+    },    
+    {
+      path: '/signup',
+      element: <SignUpPage />,
+    },
+    {
+      path: '404',
+      element: <Page404 />,
+    },
+    {
+      path: '*',
+      element: <Navigate to="/404" replace />,
+    },
+  ]);
+
+  return routes;
+}
+
+export function MentorRouter() {
+  const routes = useRoutes([
+    {
+      element: (
+        <DashboardLayout>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      ),
+      children: [
+        { element: <IndexPage />, index: true },
+        { path: 'user', element: <UserPage /> },
+        { path: 'courses', element: <ProductsPage /> },
+        { path: 'blog', element: <BlogPage /> },
+        { path: 'chat', element: <ChatPage /> },
+      ],
+      path: '/dashboard',
+    },    
     {
       path: '/signup',
       element: <SignUpPage />,

@@ -71,7 +71,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
+            helpertext={formik.touched.name && formik.errors.name}
           />
           <TextField
             fullWidth
@@ -82,7 +82,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.location && Boolean(formik.errors.location)}
-            helperText={formik.touched.location && formik.errors.location}
+            helpertext={formik.touched.location && formik.errors.location}
           />
           <TextField
             fullWidth
@@ -93,7 +93,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.contact && Boolean(formik.errors.contact)}
-            helperText={formik.touched.contact && formik.errors.contact}
+            helpertext={formik.touched.contact && formik.errors.contact}
           />
           <TextField
             fullWidth
@@ -104,7 +104,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.altnumber && Boolean(formik.errors.altnumber)}
-            helperText={formik.touched.altnumber && formik.errors.altnumber}
+            helpertext={formik.touched.altnumber && formik.errors.altnumber}
           />
           <TextField
             fullWidth
@@ -115,7 +115,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
+            helpertext={formik.touched.email && formik.errors.email}
           />
           <TextField
             fullWidth
@@ -126,7 +126,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.qualification && Boolean(formik.errors.qualification)}
-            helperText={formik.touched.qualification && formik.errors.qualification}
+            helpertext={formik.touched.qualification && formik.errors.qualification}
           />
           <TextField
             fullWidth
@@ -137,7 +137,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.course && Boolean(formik.errors.course)}
-            helperText={formik.touched.course && formik.errors.course}
+            helpertext={formik.touched.course && formik.errors.course}
           />
           <TextField
             fullWidth
@@ -148,7 +148,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.employed && Boolean(formik.errors.employed)}
-            helperText={formik.touched.employed && formik.errors.employed}
+            helpertext={formik.touched.employed && formik.errors.employed}
           />
           <TextField
             fullWidth
@@ -159,7 +159,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.aboutus && Boolean(formik.errors.aboutus)}
-            helperText={formik.touched.aboutus && formik.errors.aboutus}
+            helpertext={formik.touched.aboutus && formik.errors.aboutus}
           />
           <TextField
             fullWidth
@@ -170,7 +170,7 @@ const RenderForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.branch && Boolean(formik.errors.branch)}
-            helperText={formik.touched.branch && formik.errors.branch}
+            helpertext={formik.touched.branch && formik.errors.branch}
           />
 
           <LoadingButton

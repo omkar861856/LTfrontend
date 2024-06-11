@@ -2,23 +2,57 @@
 import 'src/global.css';
 
 import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
-import { createContext } from 'react';
-import ThemeProvider from 'src/theme';
-import UserRouter, { NormalRouter } from './routes/sections';
+
+import { useSelector } from 'react-redux';
+
+import ThemeProvider2 from 'src/theme';
+
+import AdminRouter, { NormalRouter, MentorRouter, StudentRouter } from './routes/sections';
+
 // ----------------------------------------------------------------------
 
-export const LoginContext = createContext(null);
 
 export default function App() {
+
   
-  const login = window.localStorage.getItem('login');
-  
+
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  // const role = useSelector((state) => state.user.role);
+
+  const role = useSelector((state) => state.user.role);
 
   useScrollToTop();
 
   return (
-    <LoginContext.Provider>
-      <ThemeProvider>{login === 'true' ? <UserRouter /> : <NormalRouter />}</ThemeProvider>
-    </LoginContext.Provider>
+    
+      <ThemeProvider2>{isLoggedIn ? LogInRouter(role) : <NormalRouter />}</ThemeProvider2>
+     
   );
+}
+
+function LogInRouter(role) {
+  let result;
+
+  switch (role) {
+    case 'admin':
+      result = <AdminRouter />;
+
+      break;
+
+    case 'mentor':
+      result = <MentorRouter />;
+
+      break;
+
+    case 'student':
+      result = <StudentRouter />;
+
+      break;
+
+    default: 
+    result = <div>nada</div>    
+      break;
+  }
+
+  return result;
 }

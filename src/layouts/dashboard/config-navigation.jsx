@@ -7,11 +7,11 @@ const icon = (name) => (
 );
 
 const navConfig = [
-  {
-    title: 'New enquirey',
-    path: '/dashboard/newenquirey',
-    icon: icon('ic_form'),
-  },
+  // {
+  //   title: 'New enquirey',
+  //   path: '/dashboard/newenquirey',
+  //   icon: icon('ic_form'),
+  // },
   {
     title: 'dashboard',
     path: '/dashboard',
@@ -56,3 +56,71 @@ const navConfig = [
 ];
 
 export default navConfig;
+
+// student - dashboard, users, courses, blog
+
+export const navStudentConfig = [
+  // {
+  //   title: 'New enquirey',
+  //   path: '/dashboard/newenquirey',
+  //   icon: icon('ic_form'),
+  // },
+  {
+    title: 'dashboard',
+    path: '/dashboard',
+    icon: icon('ic_analytics'),
+  },
+  {
+    title: 'user',
+    path: '/dashboard/user',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'Courses',
+    path: '/dashboard/courses',
+    icon: icon('ic_courses'),
+  },
+  {
+    title: 'blog',
+    path: '/dashboard/blog',
+    icon: icon('ic_blog'),
+  }, 
+ 
+];
+
+// mentor - dashboard, users, courses, blog, chat
+
+
+export const navMentorConfig = [
+  // {
+  //   title: 'New enquirey',
+  //   path: '/dashboard/newenquirey',
+  //   icon: icon('ic_form'),
+  // },
+  {
+    title: 'dashboard',
+    path: '/dashboard',
+    icon: icon('ic_analytics'),
+  },
+  {
+    title: 'user',
+    path: '/dashboard/user',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'Courses',
+    path: '/dashboard/courses',
+    icon: icon('ic_courses'),
+  },
+  {
+    title: 'blog',
+    path: '/dashboard/blog',
+    icon: icon('ic_blog'),
+  }, 
+  {
+    title: 'chat',
+    path: '/dashboard/chat',
+    icon: icon('ic_form'),
+  },
+ 
+];
