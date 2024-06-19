@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Account from 'src/_mock/account';
 import { user_api, enquiry_api } from 'src/services/userapi';
 
-import AppWidgetSummary from '../app-widget-summary';
+import AppWidgetSummary from '../../user/components/app-widget-summary';
 // ----------------------------------------------------------------------
 
 export default function AppView() {
