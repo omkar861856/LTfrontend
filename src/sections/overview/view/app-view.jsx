@@ -1,31 +1,29 @@
-import { faker } from '@faker-js/faker';
+import { Suspense , useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
-import Iconify from 'src/components/iconify';
+import Account from 'src/_mock/account';
+import { user_api, enquiry_api } from 'src/services/userapi';
 
-import AppTasks from '../app-tasks';
-import AppNewsUpdate from '../app-news-update';
-import AppOrderTimeline from '../app-order-timeline';
-import AppCurrentVisits from '../app-current-visits';
-import AppWebsiteVisits from '../app-website-visits';
 import AppWidgetSummary from '../app-widget-summary';
-import AppTrafficBySite from '../app-traffic-by-site';
-import AppCurrentSubject from '../app-current-subject';
-import AppConversionRates from '../app-conversion-rates';
-
 // ----------------------------------------------------------------------
 
 export default function AppView() {
+  const { user } = Account();
+
+  const { role } = user;
+
   return (
     <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
-      </Typography>
+      {ViewRouter(role)}
 
-      <Grid container spacing={3}>
+      {/* <Typography variant="h4" sx={{ mb: 5 }}>
+        Hi, Welcome back 👋
+      </Typography> */}
+
+      {/* <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="All Enquirey's"
@@ -60,10 +58,9 @@ export default function AppView() {
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
           />
-        </Grid>
+        </Grid> */}
 
-        
-
+      {/* 
         <Grid xs={12} md={6} lg={8}>
           <AppTasks
             title="Tasks"
@@ -152,9 +149,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+      {/* <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject
             title="Current Subject"
             chart={{
@@ -225,9 +222,202 @@ export default function AppView() {
               },
             ]}
           />
+        </Grid> */}
+      {/* </Grid> */}
+    </Container>
+  );
+}
+
+function ViewRouter(role) {
+  if (role === 'admin') {
+    console.log(role);
+    return <AdminView />;
+  }
+  if (role === 'student') {
+    return <StudentView />;
+  }
+  if (role === 'mentor') {
+    return <MentorView />;
+  }
+}
+
+function AdminView() {
+  const [users, setUsers] = useState([]);
+  const [enquirys, setEnquirys] = useState([]);
+  const [mentors, setMentors] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [admins, setAdmins] = useState([]);
+
+  useEffect(() => {
+    Promise.all([fetch(`${user_api}/allusers`), fetch(`${enquiry_api}/allenquirys`)])
+      .then(([resUsers, resEnquirys]) => Promise.all([resUsers.json(), resEnquirys.json()]))
+      .then(([dataUsers, dataEnquirys]) => {
+        setUsers(dataUsers.usersdb);
+        setEnquirys(dataEnquirys.enquirydb);
+        const a1 = dataUsers.usersdb.filter((user) => user.role === 'student');
+        const a2 = dataUsers.usersdb.filter((user) => user.role === 'mentor');
+        const a3 = dataUsers.usersdb.filter((user) => user.role === 'admin');
+
+        setMentors(a2);
+        setAdmins(a3);
+        setStudents(a1);
+
+        console.log(users, admins, mentors, students);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Container maxWidth="xl">
+      <Typography variant="h4" sx={{ mb: 5 }}>
+        Hi, Welcome back Admin 👋
+      </Typography>
+
+      <Grid container spacing={3}>
+        <Grid xs={12} sm={6} md={3}>
+          <Suspense fallback={<>loading...</>}>
+            <AppWidgetSummary
+              title="All Enquiry's"
+              total={enquirys.length}
+              color="success"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            />
+          </Suspense>
         </Grid>
 
-        
+        <Grid xs={12} sm={6} md={3}>
+          <Suspense fallback={<>loading...</>}>
+            <AppWidgetSummary
+              title="All Users"
+              total={users.length}
+              color="info"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            />
+          </Suspense>
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Admins"
+            total={admins.length}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Mentors"
+            total={mentors.length}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Students"
+            total={students.length}
+            color="error"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+          />
+        </Grid>
+      </Grid>
+    </Container>
+  );
+}
+
+function MentorView() {
+  return (
+    <Container maxWidth="xl">
+      <Typography variant="h4" sx={{ mb: 5 }}>
+        Hi, Welcome back Guru 👋
+      </Typography>
+
+      <Grid container spacing={3}>
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="All Enquirey's"
+            total={714000}
+            color="success"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="New Users"
+            total={1352831}
+            color="info"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Item Orders"
+            total={1723315}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Bug Reports"
+            total={234}
+            color="error"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+          />
+        </Grid>
+      </Grid>
+    </Container>
+  );
+}
+
+function StudentView() {
+  return (
+    <Container maxWidth="xl">
+      <Typography variant="h4" sx={{ mb: 5 }}>
+        Hi, Welcome back Learner 👋
+      </Typography>
+
+      <Grid container spacing={3}>
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="All Enquirey's"
+            total={714000}
+            color="success"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="New Users"
+            total={1352831}
+            color="info"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Item Orders"
+            total={1723315}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AppWidgetSummary
+            title="Bug Reports"
+            total={234}
+            color="error"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+          />
+        </Grid>
       </Grid>
     </Container>
   );

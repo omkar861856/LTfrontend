@@ -22,6 +22,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
+import { user_api } from 'src/services/userapi';
 
 import Iconify from 'src/components/iconify';
 
@@ -68,7 +69,7 @@ const RenderForm = () => {
         setSubmitting(false);
       }, 400);
       (async () => {
-        const url = `${backendUrl}/signup`;
+        const url = `${user_api}/signup`;
         const signupaxios = await axios
           .post(url, {
             name,
@@ -79,13 +80,11 @@ const RenderForm = () => {
           .then((response) => {
             setBackendResponse(response.data.msg);
             resetForm();
-            console.log(backendResponse)
             if (response.data.msg === 'User added') {
               router.push('/');
             }
           })
           .catch((error) => alert(error, 'error block activated'));
-        console.log(signupaxios);
       })();
       // alert(JSON.stringify({ email, password, role_radio }, null, 2));
     },

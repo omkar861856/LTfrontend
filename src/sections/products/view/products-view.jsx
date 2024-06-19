@@ -57,6 +57,8 @@ export default function ProductsView() {
         ))}
       </Grid>
 
+      {/* <ProductCardMain /> */}
+
       <ProductCartWidget />
     </Container>
   );

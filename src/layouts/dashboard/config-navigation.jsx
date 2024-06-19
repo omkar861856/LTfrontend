@@ -13,34 +13,44 @@ const navConfig = [
   //   icon: icon('ic_form'),
   // },
   {
-    title: 'dashboard',
+    title: ' admin dashboard',
     path: '/dashboard',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_home'),
+  },
+  {
+    title: 'new enquiry',
+    path: '/dashboard/newenquiry',
+    icon: icon('ic_enquiry'),
+  },
+  {
+    title: 'all enquirys',
+    path: '/dashboard/allenquirys',
+    icon: icon('ic_allenquiry'),
   },
   {
     title: 'user',
     path: '/dashboard/user',
-    icon: icon('ic_user'),
+    icon: icon('ic_users'),
   },
   {
     title: 'Courses',
     path: '/dashboard/courses',
-    icon: icon('ic_courses'),
+    icon: icon('ic_allcourses'),
   },
   {
     title: 'blog',
     path: '/dashboard/blog',
-    icon: icon('ic_blog'),
+    icon: icon('ic_blogs'),
   },
   {
     title: 'invoices',
     path: '/dashboard/invoices',
-    icon: icon('ic_form'),
+    icon: icon('ic_invoices'),
   },
   {
     title: 'chat',
     path: '/dashboard/chat',
-    icon: icon('ic_form'),
+    icon: icon('ic_chat'),
   },
   // ==================  Not Found and Login routes  ===========================
   // {
@@ -68,23 +78,33 @@ export const navStudentConfig = [
   {
     title: 'dashboard',
     path: '/dashboard',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_home'),
+  },
+  {
+    title: 'new enquiry',
+    path: '/dashboard/newenquiry',
+    icon: icon('ic_enquiry'),
   },
   {
     title: 'user',
     path: '/dashboard/user',
-    icon: icon('ic_user'),
+    icon: icon('ic_users'),
   },
   {
     title: 'Courses',
     path: '/dashboard/courses',
-    icon: icon('ic_courses'),
+    icon: icon('ic_allcourses'),
   },
   {
     title: 'blog',
     path: '/dashboard/blog',
-    icon: icon('ic_blog'),
-  }, 
+    icon: icon('ic_blogs'),
+  },
+  {
+    title: 'chat',
+    path: '/dashboard/chat',
+    icon: icon('ic_chat'),
+  },
  
 ];
 
@@ -98,29 +118,34 @@ export const navMentorConfig = [
   //   icon: icon('ic_form'),
   // },
   {
-    title: 'dashboard',
+    title: 'mentor dashboard',
     path: '/dashboard',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_home'),
+  },
+  {
+    title: 'new enquiry',
+    path: '/dashboard/newenquiry',
+    icon: icon('ic_enquiry'),
   },
   {
     title: 'user',
     path: '/dashboard/user',
-    icon: icon('ic_user'),
+    icon: icon('ic_users'),
   },
   {
     title: 'Courses',
     path: '/dashboard/courses',
-    icon: icon('ic_courses'),
+    icon: icon('ic_allcourses'),
   },
   {
     title: 'blog',
     path: '/dashboard/blog',
-    icon: icon('ic_blog'),
-  }, 
+    icon: icon('ic_blogs'),
+  },
   {
     title: 'chat',
     path: '/dashboard/chat',
-    icon: icon('ic_form'),
+    icon: icon('ic_chat'),
   },
  
 ];

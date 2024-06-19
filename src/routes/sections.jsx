@@ -13,10 +13,12 @@ export const SignUpPage = lazy(() => import('src/pages/signup'));
 export const NewEnquireyPage = lazy(() => import('src/pages/new-enquirey'));
 export const InvoicesPage = lazy(() => import('src/pages/invoices'));
 export const ChatPage = lazy(() => import('src/pages/chat'));
+export const AllEnquiryPage = lazy(() => import('src/pages/all-enquirys'));
+export const UserProfilePage = lazy(() => import('src/pages/user-profile'));  
 
 // ----------------------------------------------------------------------
 
-export default function AdminRouter() {
+export function AdminRouter() {
   const routes = useRoutes([
     {
       element: (
@@ -28,12 +30,14 @@ export default function AdminRouter() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'newenquirey', element: <NewEnquireyPage /> },
+        { path: 'newenquiry', element: <NewEnquireyPage /> },
+        { path: 'allenquirys', element: <AllEnquiryPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'courses', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'invoices', element: <InvoicesPage /> },
         { path: 'chat', element: <ChatPage /> },
+        { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
     },    
@@ -46,27 +50,8 @@ export default function AdminRouter() {
       element: <Page404 />,
     },
     {
-      path: '*',
-      element: <Navigate to="/404" replace />,
-    },
-  ]);
-
-  return routes;
-}
-
-export function NormalRouter() {
-  const routes = useRoutes([
-    {
       path: '/',
-      element: <LoginPage />,
-    },
-    {
-      path: '/signup',
-      element: <SignUpPage />,
-    },
-    {
-      path: '404',
-      element: <Page404 />,
+      element: <Navigate to="/dashboard" replace />,
     },
     {
       path: '*',
@@ -76,6 +61,8 @@ export function NormalRouter() {
 
   return routes;
 }
+
+
 
 export function StudentRouter() {
   const routes = useRoutes([
@@ -89,17 +76,22 @@ export function StudentRouter() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'newenquirey', element: <NewEnquireyPage /> },
+        { path: 'newenquiry', element: <NewEnquireyPage /> },
         { path: 'courses', element: <ProductsPage /> }, 
         { path: 'user', element: <UserPage /> }, 
         { path: 'blog', element: <BlogPage /> },        
         { path: 'chat', element: <ChatPage /> },
+        { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
     },    
     {
       path: '/signup',
       element: <SignUpPage />,
+    },
+    {
+      path: '/',
+      element: <Navigate to="/dashboard" replace />,
     },
     {
       path: '404',
@@ -127,12 +119,41 @@ export function MentorRouter() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
+        { path: 'newenquiry', element: <NewEnquireyPage /> },
         { path: 'courses', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'chat', element: <ChatPage /> },
+        { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
     },    
+    {
+      path: '/signup',
+      element: <SignUpPage />,
+    },
+    {
+      path: '/',
+      element: <Navigate to="/dashboard" replace />,
+    },
+    {
+      path: '404',
+      element: <Page404 />,
+    },
+    {
+      path: '*',
+      element: <Navigate to="/404" replace />,
+    },
+  ]);
+
+  return routes;
+}
+
+export function NormalRouter() {
+  const routes = useRoutes([
+    {
+      path: '/',
+      element: <LoginPage />,
+    },
     {
       path: '/signup',
       element: <SignUpPage />,

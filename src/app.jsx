@@ -1,36 +1,45 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
 
-import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 
-import { useSelector } from 'react-redux';
 
 import ThemeProvider2 from 'src/theme';
 
-import AdminRouter, { NormalRouter, MentorRouter, StudentRouter } from './routes/sections';
+import Account from 'src/_mock/account';
+import  {AdminRouter, NormalRouter, MentorRouter, StudentRouter } from './routes/sections';
+
+
 
 // ----------------------------------------------------------------------
 
-
 export default function App() {
 
-  
+  const account = Account();
 
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  console.log(account)
+
+
   // const role = useSelector((state) => state.user.role);
+  let role;
 
-  const role = useSelector((state) => state.user.role);
+  switch ((account.user?.role === undefined)) {
+    case true:
+      role = 'none';      
+      break;
+      case false:
+        role = account.user.role;      
+      break;  
+    default:     
+      break;
+  } 
+   
+  // useScrollToTop();
 
-  useScrollToTop();
-
-  return (
-    
-      <ThemeProvider2>{isLoggedIn ? LogInRouter(role) : <NormalRouter />}</ThemeProvider2>
-     
-  );
+  return <ThemeProvider2>{MainRouter(role)}</ThemeProvider2>;
 }
 
-function LogInRouter(role) {
+function MainRouter(role) {
+
   let result;
 
   switch (role) {
@@ -48,13 +57,12 @@ function LogInRouter(role) {
       result = <StudentRouter />;
 
       break;
-      case 'loggedout':
+     case 'none':
       result = <NormalRouter />;
-
       break;
 
-    default: 
-    result = <div>nada</div>    
+     default:
+      result = <NormalRouter />;
       break;
   }
 

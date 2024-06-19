@@ -17,12 +17,12 @@ import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ post, index }) {
+export default function PostCard({ post, index, draft }) {
   const { cover, title, view, comment, share, author, createdAt } = post;
 
-  const latestPostLarge = index === 0;
+  const latestPostLarge = !draft && (index === 0);
 
-  const latestPost = index === 1 || index === 2;
+  const latestPost = !draft && (index === 1 || index === 2);
 
   const renderAvatar = (
     <Avatar
@@ -204,5 +204,6 @@ export default function PostCard({ post, index }) {
 
 PostCard.propTypes = {
   post: PropTypes.object.isRequired,
-  index: PropTypes.number,
+  index: PropTypes.number.isRequired,
+  draft: PropTypes.bool.isRequired,
 };

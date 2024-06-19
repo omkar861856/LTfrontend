@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import App from './app';
+import ErrorBoundary from './ErrorBoundary';
 import { store, persistor } from './redux/store';
 import CircularIndeterminate from './utils/loading-spinner';
 
@@ -23,7 +24,9 @@ root.render(
         <Suspense fallback={<CircularIndeterminate />}>
           {/* loading={<CircularIndeterminate />} in persist gate  */}
           <PersistGate persistor={persistor}>
+          <ErrorBoundary>
             <App />
+          </ErrorBoundary>
           </PersistGate>
         </Suspense>
       </Provider>

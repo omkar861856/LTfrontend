@@ -29,10 +29,11 @@ const POST_TITLES = [
   'How to Animate a SVG with border-image',
 ];
 
-export const posts = [...Array(23)].map((_, index) => ({
+export const posts = [...Array(4)].map((_, index) => ({
   id: faker.string.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   title: POST_TITLES[index + 1],
+  content:'',
   createdAt: faker.date.past(),
   view: faker.number.int(99999),
   comment: faker.number.int(99999),
@@ -43,3 +44,37 @@ export const posts = [...Array(23)].map((_, index) => ({
     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
   },
 }));
+
+
+const DRAFT_TITLES = [
+  'Whiteboard Templates By Industry Leaders',
+  'Tesla Cybertruck-inspired camper trailer for Tesla fans who can’t just wait for the truck!',
+  'Designify Agency Landing Page Design',
+  '✨What is Done is Done ✨',
+  'Fresh Prince',
+  'Six Socks Studio',
+  'vincenzo de cotiis’ crossing over showcases a research on contamination',
+  'Simple, Great Looking Animations in Your Project | Video Tutorial',
+  'Portfolio Review: Is This Portfolio Too Creative?',
+  'Akkers van Margraten',
+  'Gradient Ticket icon',
+  'Here’s a Dyson motorcycle concept that doesn’t ‘suck’!',
+  'How to Animate a SVG with border-image',
+];
+
+export const drafts = [...Array(2)].map((_, index) => ({
+  id: faker.string.uuid(),
+  cover: `/assets/images/covers/cover_${index + 1}.jpg`,
+  title: DRAFT_TITLES[index + 1],
+  createdAt: faker.date.past(),
+  view: faker.number.int(99999),
+  comment: faker.number.int(99999),
+  share: faker.number.int(99999),
+  favorite: faker.number.int(99999),
+  author: {
+    name: faker.person.fullName(),
+    avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
+  },
+}));
+
+

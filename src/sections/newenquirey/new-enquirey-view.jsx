@@ -1,18 +1,49 @@
-import * as yup from 'yup';
-import { useFormik } from 'formik';
+import axios from "axios";
+import * as yup from "yup";
+import { useState } from "react";
+import { useFormik , FormikProvider } from "formik";
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { alpha, useTheme } from '@mui/material/styles';
-
-import { bgGradient } from 'src/theme/css';
-
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Radio from "@mui/material/Radio";
+import TextField from "@mui/material/TextField";
+import FormLabel from "@mui/material/FormLabel";
+import Typography from "@mui/material/Typography";
+import RadioGroup from "@mui/material/RadioGroup";
+import LoadingButton from "@mui/lab/LoadingButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
+
+const backendUrl = "https://qrform-ltbackend.vercel.app";
+
+// todays date
+
+const today = new Date();
+
+// Get the day of the month
+let dd = today.getDate();
+
+// Get the month (adding 1 because months are zero-based)
+let mm = today.getMonth() + 1;
+
+// Get the year
+const yyyy = today.getFullYear();
+
+// Add leading zero if the day is less than 10
+if (dd < 10) {
+  dd = `0${  dd}`;
+}
+
+// Add leading zero if the month is less than 10
+if (mm < 10) {
+  mm = `0${  mm}`;
+}
+
+// Format the date as dd/mm/yyyy and log it
+const today_now = `${dd  }/${  mm  }/${  yyyy}`;
 
 // ================= validation schema
 
@@ -20,189 +51,350 @@ const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const validationSchema = yup.object().shape({
-  name: yup.string().label('This').required(),
-  location: yup.string().label('This').required(),
-  contact: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
-  altnumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
-  email: yup.string().label('This').required().email(),
-  qualification: yup.string().label('This').required(),
-  branch: yup.string().label('This').required(),
-  course: yup.string().label('This').required(),
-  employed: yup.string().label('This'),
-  aboutus: yup.string().label('This'),
+  name: yup.string().label("This").required(),
+  location: yup.string().label("This").required(),
+  contact: yup.string().matches(phoneRegExp, "Phone number is not valid").required(),
+  altnumber: yup.string().matches(phoneRegExp, "Phone number is not valid"),
+  email: yup.string().label("This").required().email(),
+  qualification: yup.string().label("This").required(),
+  branch: yup.string().label("This").required(),
+  course: yup.string().label("This").required(),
+  employed: yup.string().label("This"),
+  aboutUs: yup.string().label("This"),
+  isEmployed:yup.bool().label("This").required(),
+  isFresher:yup.bool().label("This").required(),
 });
 
 const RenderForm = () => {
-  const dateObj = new Date();
-  const month = dateObj.getUTCMonth() + 1; // months from 1-12
-  const day = dateObj.getUTCDate();
-  const year = dateObj.getUTCFullYear();
-  const signInTime = dateObj.toLocaleTimeString();
+  const [backendResponse, setBackendResponse] = useState();
+  const [loading, setLoading] = useState(false);
+
 
   const formik = useFormik({
     initialValues: {
-      name: 'Vasudev',
-      location: 'Bengaluru',
-      contact: '8888888888',
-      altnumber: '0000000000',
-      email: 'johndoe@gmail.com',
-      qualification: 'B.E.',
-      course: 'MERN stack',
-      employed: 'Yes, Microsoft',
-      aboutus: 'Got to know form Internet',
-      branch: 'I.T',
+      name: "",
+      location: "",
+      contact: "",
+      altContact: "",
+      email: "",
+      qualification: "",
+      course: "",
+      organisation: "",
+      aboutUs: "",
+      isEmployed: null,
+      branch: "",
+      preferredLocation: "",
+      isFresher: null,
+      preferredBatch: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify({ values, signInTime, day, month, year }, null, 2));
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      setBackendResponse(null);
+
+      setTimeout(() => {
+        //   alert(JSON.stringify({email:email,password:password}, null, 2));
+        setLoading(true);
+        setSubmitting(false);
+      }, 0);
+
+      (async () => {
+        const url = `${backendUrl}/enquiry`;
+
+        await axios
+          .post(url, {
+            ...values,
+            creationDate: today,
+          })
+          .then((response) => {
+            resetForm();
+            if (response.data.msg === "Enquirey registered") {
+              alert(response.data.msg);
+
+              setLoading(false);
+            }
+          })
+          .catch((error) => {
+            resetForm();
+            alert(error);
+            setBackendResponse("User not found");
+          });
+      })();
+      // alert(JSON.stringify({email,password, login_location}, null, 2));
     },
   });
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={3} mb={3}>
-          <TextField
-            fullWidth
-            id="name"
-            name="name"
-            label="Name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helpertext={formik.touched.name && formik.errors.name}
-          />
-          <TextField
-            fullWidth
-            id="location"
-            name="location"
-            label="Location"
-            value={formik.values.location}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.location && Boolean(formik.errors.location)}
-            helpertext={formik.touched.location && formik.errors.location}
-          />
-          <TextField
-            fullWidth
-            id="contact"
-            name="contact"
-            label="Contact"
-            value={formik.values.contact}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.contact && Boolean(formik.errors.contact)}
-            helpertext={formik.touched.contact && formik.errors.contact}
-          />
-          <TextField
-            fullWidth
-            id="altnumber"
-            name="altnumber"
-            label="Alternate number"
-            value={formik.values.altnumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.altnumber && Boolean(formik.errors.altnumber)}
-            helpertext={formik.touched.altnumber && formik.errors.altnumber}
-          />
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            label="Email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helpertext={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            fullWidth
-            id="qualification"
-            name="qualification"
-            label="Qualification"
-            value={formik.values.qualification}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.qualification && Boolean(formik.errors.qualification)}
-            helpertext={formik.touched.qualification && formik.errors.qualification}
-          />
-          <TextField
-            fullWidth
-            id="course"
-            name="course"
-            label="Course"
-            value={formik.values.course}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.course && Boolean(formik.errors.course)}
-            helpertext={formik.touched.course && formik.errors.course}
-          />
-          <TextField
-            fullWidth
-            id="employed"
-            name="employed"
-            label="Employed..? Organisation name"
-            value={formik.values.employed}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.employed && Boolean(formik.errors.employed)}
-            helpertext={formik.touched.employed && formik.errors.employed}
-          />
-          <TextField
-            fullWidth
-            id="aboutus"
-            name="aboutus"
-            label="How did you come to know about us?"
-            value={formik.values.aboutus}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.aboutus && Boolean(formik.errors.aboutus)}
-            helpertext={formik.touched.aboutus && formik.errors.aboutus}
-          />
-          <TextField
-            fullWidth
-            id="branch"
-            name="branch"
-            label="Branch"
-            value={formik.values.branch}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.branch && Boolean(formik.errors.branch)}
-            helpertext={formik.touched.branch && formik.errors.branch}
-          />
+    <FormikProvider value={formik}>
+      <div>
+        <form onSubmit={formik.handleSubmit}>
+          <Stack spacing={3} mb={3}>
+            {/* <div role="group" aria-labelledby="my-radio-group1">
+                <label>
+                  <Field type="radio" name="preferredLocation" value="btm" />
+                  BTM
+                </label>
+                <label>
+                  <Field type="radio" name="preferredLocation" value="marathahalli" />
+                  Marathahalli
+                </label>
+                <label>
+                  <Field type="radio" name="preferredLocation" value="online" />
+                  Online
+                </label>
+              </div> */}
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            color="secondary"
-            // onClick={handleClick}
-          >
-            Submit
-          </LoadingButton>
-        </Stack>
-      </form>
-    </div>
+            <TextField
+             required
+              fullWidth
+              id="name"
+              name="name"
+              label="Name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helpertext={formik.touched.name && formik.errors.name}
+            />
+            <TextField
+             required
+              fullWidth
+              id="location"
+              name="location"
+              label="Location"
+              value={formik.values.location}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.location && Boolean(formik.errors.location)}
+              helpertext={formik.touched.location && formik.errors.location}
+            />
+            <FormLabel id="demo-radio-buttons-group-label">
+              Are you a Fresher?*
+            </FormLabel>
+            <RadioGroup                            
+              row
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue={null}
+              name="isFresher"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.isFresher && Boolean(formik.errors.isFresher)
+              }
+              helpertext={formik.touched.isFresher && formik.errors.isFresher}
+            >
+              <FormControlLabel value control={<Radio required/>} label="Yes" />
+              <FormControlLabel value={false} control={<Radio required />} label="No" />
+            </RadioGroup>            
+            <TextField
+              fullWidth
+              required
+              id="contact"
+              name="contact"
+              label="Contact"
+              value={formik.values.contact}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.contact && Boolean(formik.errors.contact)}
+              helpertext={formik.touched.contact && formik.errors.contact}
+            />
+            <TextField
+              fullWidth
+              id="altContact"
+              name="altContact"
+              label="Alternate number"
+              value={formik.values.altContact}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.altContact && Boolean(formik.errors.altContact)
+              }
+              helpertext={formik.touched.altContact && formik.errors.altContact}
+            />
+            <TextField
+              fullWidth
+              required
+              id="email"
+              name="email"
+              label="Email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helpertext={formik.touched.email && formik.errors.email}
+            />
+            <FormLabel id="demo-radio-buttons-group-label">
+              Preferred Location*
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue=""
+              name="preferredLocation"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.preferredLocation &&
+                Boolean(formik.errors.preferredLocation)
+              }
+              helpertext={
+                formik.touched.preferredLocation &&
+                formik.errors.preferredLocation
+              }
+            >
+              <FormControlLabel value="btm" control={<Radio required/>} label="Btm" />
+              <FormControlLabel
+                value="marathahalli"
+                control={<Radio required/>}
+                label="Marathahalli"
+              />
+              <FormControlLabel
+                value="online"
+                control={<Radio required/>}
+                label="Online"
+              />
+            </RadioGroup>
+            <TextField
+            required
+              fullWidth
+              id="qualification"
+              name="qualification"
+              label="Qualification"
+              value={formik.values.qualification}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.qualification &&
+                Boolean(formik.errors.qualification)
+              }
+              helpertext={
+                formik.touched.qualification && formik.errors.qualification
+              }
+            />
+            <TextField
+              fullWidth
+              required
+              id="course"
+              name="course"
+              label="Course"
+              value={formik.values.course}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.course && Boolean(formik.errors.course)}
+              helpertext={formik.touched.course && formik.errors.course}
+            />
+            <FormLabel id="demo-radio-buttons-group-label">
+              Are you Employed?*
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue=""
+              name="isEmployed"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.isEmployed && Boolean(formik.errors.isEmployed)
+              }
+              helpertext={formik.touched.isEmployed && formik.errors.isEmployed}
+            >
+              <FormControlLabel value control={<Radio required/>} label="Yes" />
+              <FormControlLabel value={false} control={<Radio required/>} label="No" />
+            </RadioGroup>            
+            {formik.values.isEmployed === "true" ? (
+              <TextField
+                fullWidth
+                required
+                id="organisation"
+                name="organisation"
+                label="Employed organisation name"
+                value={formik.values.organisation}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.organisation &&
+                  Boolean(formik.errors.organisation)
+                }
+                helpertext={
+                  formik.touched.organisation && formik.errors.organisation
+                }
+              />
+            ) : null}
+
+            <TextField
+              fullWidth
+              id="aboutUs"
+              name="aboutUs"
+              label="How did you come to know about us?"
+              value={formik.values.aboutUs}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.aboutUs && Boolean(formik.errors.aboutUs)}
+              helpertext={formik.touched.aboutUs && formik.errors.aboutUs}
+            />
+
+            <TextField
+              fullWidth
+              required
+              id="branch"
+              name="branch"
+              label="Branch"
+              value={formik.values.branch}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.branch && Boolean(formik.errors.branch)}
+              helpertext={formik.touched.branch && formik.errors.branch}
+            />
+
+            <FormLabel id="demo-radio-buttons-group-label">
+              Preferred Batch*
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue=""
+              name="preferredBatch"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.preferredBatch &&
+                Boolean(formik.errors.preferredBatch)
+              }
+              helpertext={
+                formik.touched.preferredBatch && formik.errors.preferredBatch
+              }
+            >
+              <FormControlLabel
+                value="weekdays"
+                control={<Radio required/>}
+                label="Weekdays"
+              />
+              <FormControlLabel
+                value="weekends"
+                control={<Radio required/>}
+                label="Weekends"
+              />
+            </RadioGroup>
+
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              color="primary"
+              // onClick={handleClick}
+            >
+              Submit
+            </LoadingButton>
+          </Stack>
+        </form>
+      </div>
+    </FormikProvider>
   );
 };
 
 export default function NewEnquireyView() {
-  const theme = useTheme();
-
   return (
-    <Box
-      sx={{
-        ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
-        }),
-        height: 1,
-      }}
-    >    
-
+    <Box>
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -211,9 +403,18 @@ export default function NewEnquireyView() {
             maxWidth: 420,
           }}
         >
-          <Typography sx={{ pb: 2 }} variant="h4">
-            Enquirey form
-          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={8}>
+              <Typography sx={{ pb: 2 }} variant="h4">
+                Enquiry form
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography sx={{ pb: 2 }} variant="h6">
+                {today_now}
+              </Typography>
+            </Grid>
+          </Grid>
 
           {/* ========Google, Facebook, Twitter Buttons========= */}
 
@@ -255,7 +456,7 @@ export default function NewEnquireyView() {
             </Typography>
           </Divider> */}
 
-          {RenderForm()}          
+          {RenderForm()}
         </Card>
       </Stack>
     </Box>

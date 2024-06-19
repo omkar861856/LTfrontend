@@ -25,12 +25,13 @@ import { useRouter } from 'src/routes/hooks';
 import CircularIndeterminate from 'src/utils/loading-spinner';
 
 import { bgGradient } from 'src/theme/css';
+import { user_api } from 'src/services/userapi';
 import { signIn } from 'src/redux/slices/userSlice';
 
 import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
-const backendUrl = 'https://learnmore-backend-chi.vercel.app';
+const backendUrl = user_api;
 
 // ================= validation schema
 
@@ -40,20 +41,30 @@ const validationSchema = yup.object().shape({
   password: yup.string().label('Password').required(),
 });
 
-const RenderForm = (router) => {
+const RenderForm = () => {
+
   const dispatch = useDispatch();
+  const router = useRouter()
 
 
 
-  const dateObj = new Date();
-  // const month = dateObj.getUTCMonth() + 1; // months from 1-12
-  // const day = dateObj.getUTCDate();
-  // const year = dateObj.getUTCFullYear();
-  // const signInTime = dateObj.toLocaleTimeString();
+  const timeObj = new Date().toLocaleTimeString(undefined, {
+    timeZone: "Asia/Kolkata",
+  });;
+
+  const dayObj = new Date().toLocaleDateString(undefined, {
+    timeZone: "Asia/Kolkata",
+  });;
+  // const month = timeObj.getUTCMonth() + 1; // months from 1-12
+  // const day = timeObj.getUTCDate();
+  // const year = timeObj.getUTCFullYear();
+  // const signInTime = timeObj.toLocaleTimeString();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backendResponse, setBackendResponse] = useState('');
+
+  const login = new Date();
 
   const formik = useFormik({
     initialValues: {
@@ -64,37 +75,49 @@ const RenderForm = (router) => {
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      const { email, password, login_location, login_time } = values;
+      const { email, password, login_location} = values;
       setBackendResponse(null);
       setTimeout(() => {
         //   alert(JSON.stringify({email:email,password:password}, null, 2));
         setLoading(true);
         setSubmitting(false);
       }, 0);
-      (async () => {
+      ( async () => {
         const url = `${backendUrl}/signin`;
-        await axios
+        
+           await axios
           .post(url, {
             email,
             password,
+            login,
             login_location,
-            login_time: dateObj,
+            loginDay: dayObj,
+            loginTime: timeObj,
           })
           .then((response) => {
-            resetForm();
-            if (response.data.msg === 'logged in') {
+            resetForm();            
+            if (response.data.msg === 'Logged in') {
               setBackendResponse(response.data.msg);
               dispatch(
                 signIn({
                   email,
+                  login,
+                  logout:'not yet',
                   login_location,
                   name: response.data.name,
-                  login_time,
+                  loginDay: dayObj,
+                  loginTime: timeObj,
                   token: response.data.token,
                   role: response.data.role,
                 })
-              );
-              setLoading(false);                 
+              )
+              console.log(response)
+              router.push('/dashboard');
+              setLoading(false);                               
+            }else{
+              resetForm();
+              setBackendResponse(response.data.msg)
+              setLoading(!loading)
             }
           })
           .catch((error) => {
@@ -119,7 +142,7 @@ const RenderForm = (router) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
+            helpertext={formik.touched.email && formik.errors.email}
           />
           <TextField
             fullWidth
@@ -131,7 +154,7 @@ const RenderForm = (router) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
+            helpertext={formik.touched.password && formik.errors.password}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -152,7 +175,7 @@ const RenderForm = (router) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.login_location && Boolean(formik.errors.login_location)}
-            helperText={formik.touched.login_location && formik.errors.login_location}
+            helpertext={formik.touched.login_location && formik.errors.login_location}
           >
             <FormControlLabel value="btm" control={<Radio />} label="BTM" />
 
@@ -194,6 +217,7 @@ const RenderForm = (router) => {
               )}
             </div>
           )}
+          {backendResponse}
         </Stack>
       </form>
     </div>
@@ -207,8 +231,8 @@ export default function LoginView() {
 
 
   // Must use destructuring router assignmenteslint
+  const router = useRouter()
 
-  const { push: pushToDashboard } = useRouter();
 
   return (
     <Box
@@ -220,8 +244,6 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      {isLoggedIn === true && pushToDashboard('/dashboard')}
-
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -235,7 +257,7 @@ export default function LoginView() {
             Don’t have an account?
             <Button
               onClick={() => {
-                pushToDashboard('/signup');
+                router.push('/signup');
               }}
             >
               Sign Up
@@ -278,7 +300,7 @@ export default function LoginView() {
               OR
             </Typography>
           </Divider> */}
-          {RenderForm(pushToDashboard)}{' '}
+          {RenderForm()}{' '}
         </Card>
       </Stack>
     </Box>
