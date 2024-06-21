@@ -280,7 +280,9 @@ export default function SignUpView() {
           </Divider> */}
           {RenderForm()}
 
-          {SendVerificationCode()}
+          {/* Email Verification code nodemailer and mailtrap */}
+
+          {/* {SendVerificationCode()} */}
 
           <a
             rel="noreferrer"
