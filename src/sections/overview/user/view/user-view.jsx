@@ -9,11 +9,9 @@ import UserView from '../demo';
 
 
 
-
-
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function UserViewFinal() {
 
   const {user} = Account();
 

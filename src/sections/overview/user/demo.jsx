@@ -406,6 +406,7 @@ function MenteeManagement() {
     try {
       const response = await axios.get('https://6666e9e8a2f8516ff7a57eb4.mockapi.io/mentors'); // Replace with your API endpoint
       setMentees(response.data); // Assuming mentees data is an array of objects
+      console.log(response.data); //
     } catch (error) {
       console.error('Error fetching mentees:', error);
       // Handle error
@@ -573,6 +574,7 @@ function CourseManagement () {
       try {
         const response = await axios.get('https://mocki.io/v1/276fdd48-f3b1-4070-be56-1974b9b65475'); // Replace with your API endpoint
         setCourses(response.data); // Assuming courses data is an array of objects
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
         // Handle error
@@ -877,7 +879,7 @@ function CourseManagement () {
         const response = await axios.get('https://mocki.io/v1/7f9fbf74-a417-41f3-916a-b40a6b26c217'); // Replace with your API endpoint
         setMentees(response.data); // Assuming mentees data is an array of objects
         setLoading(false);
-        console.log(mentees)
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching mentees data:', error);
         setLoading(false);
@@ -1034,9 +1036,11 @@ function CourseManagement () {
     useEffect(() => {
       // Mock API call to fetch feedback data
       axios.get('https://mocki.io/v1/d0922c8d-1306-4db8-976b-3f8e3bf47282')
-        .then(response => setFeedbackData(response.data))
+        .then(response => {setFeedbackData(response.data)})
         .catch(error => console.error('Error fetching feedback data:', error));
     }, []);
+
+    console.log(feedbackData)
   
     const handleChange = (event) => {
       const { name, value } = event.target;
@@ -1174,6 +1178,8 @@ function CourseManagement () {
         .then(response => setScheduleData(response.data))
         .catch(error => console.error('Error fetching schedule data:', error));
     }, []);
+
+    console.log(scheduleData);
   
     const events = scheduleData.map(event => ({
       id: event.id,
@@ -1357,6 +1363,8 @@ function CourseManagement () {
         .then(response => setDiscussionData(response.data))
         .catch(error => console.error('Error fetching discussion data:', error));
     }, []);
+
+    console.log(chatData, discussionData, announcementsData )
   
     const handleSendMessage = () => {
       const newChatEntry = {

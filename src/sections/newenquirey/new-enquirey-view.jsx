@@ -15,6 +15,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+
 // ----------------------------------------------------------------------
 
 const backendUrl = "https://qrform-ltbackend.vercel.app";
@@ -68,6 +69,7 @@ const validationSchema = yup.object().shape({
 const RenderForm = () => {
   const [backendResponse, setBackendResponse] = useState();
   const [loading, setLoading] = useState(false);
+
 
 
   const formik = useFormik({
@@ -393,6 +395,7 @@ const RenderForm = () => {
 };
 
 export default function NewEnquireyView() {
+  
   return (
     <Box>
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
@@ -400,7 +403,7 @@ export default function NewEnquireyView() {
           sx={{
             p: 5,
             width: 1,
-            maxWidth: 420,
+            maxWidth: 620,
           }}
         >
           <Grid container spacing={2}>

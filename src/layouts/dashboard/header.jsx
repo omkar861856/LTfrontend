@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import  {Button, Typography } from '@mui/material';
 
 import { useResponsive } from 'src/hooks/use-responsive';
+import { useState } from 'react';
 
 import { bgBlur } from 'src/theme/css';
 import Account from 'src/_mock/account';
@@ -27,6 +28,11 @@ import NotificationsPopover from './common/notifications-popover';
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme();
+  const [working, setWorking] = useState();
+
+  const ToggleWorking=()=>{
+    setWorking(!working);
+  }
 
   const {user} = Account();
 
@@ -49,12 +55,13 @@ export default function Header({ onOpenNav }) {
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
-        {lgUp?<Typography color="common.black">{user.login_location}</Typography>:null}
-        
+        {lgUp?<Typography color="common.black">{user.login_location}</Typography>:null}       
 
-        <Button sx={{ mr: 1 }}>
-          Working/Break
-        </Button>  
+        {working?<Button variant="contained" color="warning"  onClick={ToggleWorking} sx={{ mr: 1 }}>
+          Break
+        </Button> :<Button variant="contained" color="success" onClick={ToggleWorking} sx={{ mr: 1 }}>
+          Working
+        </Button> }         
         <LanguagePopover />
         <NotificationsPopover />
         <AccountPopover />

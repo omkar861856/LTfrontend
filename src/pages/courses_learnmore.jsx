@@ -1,16 +1,20 @@
 import { Helmet } from 'react-helmet-async';
 
-import UserViewFinal from 'src/sections/overview/user/view/user-view';
+import { LearnMoreView } from 'src/sections/coursePage';
+
+
+
 // ------------------providing metadata----------------------------------------------------
 
-export default function UserPage() {
+export default function CourseLearnMorePage() {
   return (
     <>
       <Helmet>
-        <title> User | LT </title>
+        <title> Course View | LT </title>
       </Helmet>
 
-      <UserViewFinal />
+      <LearnMoreView />     
+
     </>
   );
 }

@@ -26,12 +26,7 @@ const navConfig = [
     title: 'all enquirys',
     path: '/dashboard/allenquirys',
     icon: icon('ic_allenquiry'),
-  },
-  {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('ic_users'),
-  },
+  },  
   {
     title: 'Courses',
     path: '/dashboard/courses',
@@ -85,11 +80,7 @@ export const navStudentConfig = [
     path: '/dashboard/newenquiry',
     icon: icon('ic_enquiry'),
   },
-  {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('ic_users'),
-  },
+  
   {
     title: 'Courses',
     path: '/dashboard/courses',
@@ -127,11 +118,7 @@ export const navMentorConfig = [
     path: '/dashboard/newenquiry',
     icon: icon('ic_enquiry'),
   },
-  {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('ic_users'),
-  },
+  
   {
     title: 'Courses',
     path: '/dashboard/courses',

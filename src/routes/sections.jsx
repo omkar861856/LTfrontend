@@ -14,7 +14,9 @@ export const NewEnquireyPage = lazy(() => import('src/pages/new-enquirey'));
 export const InvoicesPage = lazy(() => import('src/pages/invoices'));
 export const ChatPage = lazy(() => import('src/pages/chat'));
 export const AllEnquiryPage = lazy(() => import('src/pages/all-enquirys'));
-export const UserProfilePage = lazy(() => import('src/pages/user-profile'));  
+export const UserProfilePage = lazy(() => import('src/pages/user-profile'));
+export const ApplyNowPage = lazy(() => import('src/pages/apply-now'));
+export const CourseLearnMorePage = lazy(() => import('src/pages/courses_learnmore'));
 
 // ----------------------------------------------------------------------
 
@@ -33,14 +35,27 @@ export function AdminRouter() {
         { path: 'newenquiry', element: <NewEnquireyPage /> },
         { path: 'allenquirys', element: <AllEnquiryPage /> },
         { path: 'user', element: <UserPage /> },
-        { path: 'courses', element: <ProductsPage /> },
+        {
+          path: 'courses',
+          children: [
+            { element: <ProductsPage />, index: true },
+            { path: 'applynow', element: <ApplyNowPage /> },
+            { path: 'courselearnmore', element: <CourseLearnMorePage /> },
+
+          ],
+          element: (
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          ),
+        },
         { path: 'blog', element: <BlogPage /> },
         { path: 'invoices', element: <InvoicesPage /> },
         { path: 'chat', element: <ChatPage /> },
         { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
-    },    
+    },
     {
       path: '/signup',
       element: <SignUpPage />,
@@ -62,8 +77,6 @@ export function AdminRouter() {
   return routes;
 }
 
-
-
 export function StudentRouter() {
   const routes = useRoutes([
     {
@@ -77,14 +90,18 @@ export function StudentRouter() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'newenquiry', element: <NewEnquireyPage /> },
-        { path: 'courses', element: <ProductsPage /> }, 
-        { path: 'user', element: <UserPage /> }, 
-        { path: 'blog', element: <BlogPage /> },        
+        {
+          path: 'courses',
+
+          element: <ProductsPage />,
+        },
+        { path: 'user', element: <UserPage /> },
+        { path: 'blog', element: <BlogPage /> },
         { path: 'chat', element: <ChatPage /> },
         { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
-    },    
+    },
     {
       path: '/signup',
       element: <SignUpPage />,
@@ -126,7 +143,7 @@ export function MentorRouter() {
         { path: 'profile', element: <UserProfilePage /> },
       ],
       path: '/dashboard',
-    },    
+    },
     {
       path: '/signup',
       element: <SignUpPage />,

@@ -26,6 +26,8 @@ import { user_api } from 'src/services/userapi';
 
 import Iconify from 'src/components/iconify';
 
+import SendVerificationCode from './send-verification-code';
+
 // ================= validation schema ==================
 
 const validationSchema = yup.object().shape({
@@ -277,6 +279,8 @@ export default function SignUpView() {
             </Typography>
           </Divider> */}
           {RenderForm()}
+
+          {SendVerificationCode()}
 
           <a
             rel="noreferrer"

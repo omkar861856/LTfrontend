@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridToolbar, useGridApiRef } from '@mui/x-data-grid';
 import { user_api } from 'src/services/userapi';
+import ContactModal from './modal';
 
 const style = {
   position: 'absolute',
@@ -25,15 +26,18 @@ const style = {
 export default function EnquiryTable() {
   // ----- demo data generator from mui -----
 
-  const [open, setOpen] = React.useState(false);
-  const handleModalOpen = () => setOpen(true);
-  const handleModalClose = () => setOpen(false);
+  const [sortModel, setSortModel] = React.useState([
+    {
+      field: 'creationDate',
+      sort: 'desc',
+    },
+  ]);
 
   const [message, setMessage] = useState('');
 
   const handleRowClick = (params) => {
-    setMessage(`Name: "${params.row.name}" clicked`);
-    handleModalOpen();
+    setMessage(params.row);
+    handleOpenModal();
   };
 
   const apiRef = useGridApiRef();
@@ -56,6 +60,7 @@ export default function EnquiryTable() {
     return data.enquirydb;
   }
 
+  // important data schema for table MUI
   const [data1, setData1] = useState({
     columns: [
       {
@@ -267,6 +272,19 @@ export default function EnquiryTable() {
       },
     },
   });
+
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = (contact) => {
+    setSelectedContact(contact);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedContact(null);
+  };
 
   // const data = {
   //   columns: [
@@ -521,8 +539,8 @@ export default function EnquiryTable() {
       }));
       setLoading(false);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -531,26 +549,16 @@ export default function EnquiryTable() {
           loadingOverlay: LinearProgress,
           toolbar: GridToolbar,
         }}
-        loading ={loading}       
+        loading={loading}
+        sortModel={sortModel}
         onRowClick={handleRowClick}
         apiRef={apiRef}
         {...data1}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
       />
-      <Modal
-        open={open}
-        onClose={handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {message}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }} />
-        </Box>
-      </Modal>
+
+      <ContactModal open={modalOpen} handleClose={handleCloseModal} contactData={message} />
     </div>
   );
 }

@@ -90,8 +90,7 @@ export default function AccountPopover() {
           email: user.email,
           login: user.login,
         })
-        .then((response) => {
-          alert(response.data.msg);
+        .then((response) => {          
           if (response.data.msg === 'Logout time recorded successfully') {
             router.push('/');
           } else {

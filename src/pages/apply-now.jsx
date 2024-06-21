@@ -1,16 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import UserViewFinal from 'src/sections/overview/user/view/user-view';
+import { ApplyNowView } from 'src/sections/applyNowPage';
+
 // ------------------providing metadata----------------------------------------------------
 
-export default function UserPage() {
+export default function ApplyNowPage() {
   return (
     <>
       <Helmet>
-        <title> User | LT </title>
+        <title> Apply Now | LT </title>
       </Helmet>
 
-      <UserViewFinal />
+      <ApplyNowView />
     </>
   );
 }

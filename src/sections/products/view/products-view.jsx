@@ -12,6 +12,8 @@ import ProductSort from '../product-sort';
 import ProductFilters from '../product-filters';
 import ProductCartWidget from '../product-cart-widget';
 
+import CourseCard from '../components/CourseCard';
+
 // ----------------------------------------------------------------------
 
 export default function ProductsView() {
@@ -28,9 +30,10 @@ export default function ProductsView() {
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        
+        Courses
       </Typography>
-
+{/* 
       <Stack
         direction="row"
         alignItems="center"
@@ -47,19 +50,20 @@ export default function ProductsView() {
 
           <ProductSort />
         </Stack>
-      </Stack>
+      </Stack> */}
 
       <Grid container spacing={3}>
         {products.map((product) => (
-          <Grid key={product.id} xs={12} sm={6} md={3}>
-            <ProductCard product={product} />
+          <Grid key={product.id} xs={12} sm={12} md={12}>
+            {/* <ProductCard product={product} /> */}
+            <CourseCard course={product}/>
           </Grid>
         ))}
       </Grid>
 
       {/* <ProductCardMain /> */}
 
-      <ProductCartWidget />
+      {/* <ProductCartWidget /> */}
     </Container>
   );
 }
