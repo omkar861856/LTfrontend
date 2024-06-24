@@ -8,8 +8,6 @@ import EnquiryTable from './components/table';
 function AllEnquiryView() {
   const [darkMode, setDarkMode] = useState(true);
 
-  const [notifications, setNotifications] = useState([]);
-
   // create a darkTheme function to handle dark theme using createTheme
   const darkTheme = createTheme({
     palette: {

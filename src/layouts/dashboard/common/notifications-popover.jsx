@@ -19,10 +19,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { fToNow } from 'src/utils/format-time';
 
 import Account from 'src/_mock/account';
-import { socket_user_api } from 'src/services/userapi';
+import { production, socket_user_api } from 'src/services/userapi';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+
 
 
 
@@ -79,6 +80,7 @@ const NOTIFICATIONS = [
 
 
 export default function NotificationsPopover() {
+
   const {user} = Account();
 
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
@@ -87,8 +89,25 @@ export default function NotificationsPopover() {
 
   const [open, setOpen] = useState(null);
 
+  let w;
+
+  switch (production) {
+    case true:
+      w = 'wss'
+      
+      break;
+      case false:
+      w = 'ws'      
+      break;
+  
+    default:
+      break;
+  }
+  
+
+
   useEffect(() => {
-    const ws = new WebSocket(`wss:${socket_user_api}`); // Updated to match the WebSocket server port
+    const ws = new WebSocket(`${w}:${socket_user_api}`); // Updated to match the WebSocket server port
 
     ws.onopen = () => {
       console.log('Connected to WebSocket server');
@@ -97,7 +116,7 @@ export default function NotificationsPopover() {
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log('Notification received:', data);
-      setNotifications((prevNotifications) => [...prevNotifications, {title:`New Enquiry by ${data.fullDocument.name}`, isUnRead:true, createdAt:data.wallTime, type: "new_enquiry"}]);
+      setNotifications((prevNotifications) => [...prevNotifications, {title:`New Enquiry by ${data.name}`, isUnRead:true, createdAt:data.creationDate, type: "new_enquiry"}]);
     };
 
     ws.onclose = () => {
@@ -111,6 +130,7 @@ export default function NotificationsPopover() {
     return () => {
       ws.close();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOpen = (event) => {

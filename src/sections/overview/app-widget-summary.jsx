@@ -11,7 +11,6 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
   return (
-    
     <Card
       component={Stack}
       spacing={3}
@@ -24,10 +23,7 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
       }}
       {...other}
     >
-      
       {icon && <Box sx={{ width: 64, height: 64 }}>{icon}</Box>}
-
-      
 
       <Stack spacing={0.5}>
         <Typography variant="h4">{fShortenNumber(total)}</Typography>
@@ -36,13 +32,7 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
           {title}
         </Typography>
       </Stack>
-
-
-      
-
-      
     </Card>
-   
   );
 }
 

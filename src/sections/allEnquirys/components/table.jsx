@@ -1,12 +1,12 @@
+import axios from 'axios';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridToolbar, useGridApiRef } from '@mui/x-data-grid';
+
 import { user_api } from 'src/services/userapi';
+
 import ContactModal from './modal';
 
 const style = {
@@ -51,14 +51,22 @@ export default function EnquiryTable() {
   // ************* Important data schema *******************
 
   async function feedData() {
+  try {
     setLoading(true);
-    const response = await fetch(`${user_api}/allenquirys`);
-    const data = await response.json();
+    const response = await axios.get(`${user_api}/allenquirys`);
+    const {data} = response;
     if (data.length === 0) {
       noEnquirys();
     }
     return data.enquirydb;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    // Handle error appropriately
+    return []
+  } finally {
+    setLoading(false);    
   }
+}
 
   // important data schema for table MUI
   const [data1, setData1] = useState({
@@ -543,14 +551,14 @@ export default function EnquiryTable() {
   }, []);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: '80vh', width: '100%' }}>
       <DataGrid
         slots={{
           loadingOverlay: LinearProgress,
           toolbar: GridToolbar,
         }}
         loading={loading}
-        sortModel={sortModel}
+        // sortModel={sortModel}
         onRowClick={handleRowClick}
         apiRef={apiRef}
         {...data1}

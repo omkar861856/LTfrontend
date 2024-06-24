@@ -1,13 +1,17 @@
 import 'chart.js/auto';
 import axios from 'axios';
-import parse from 'date-fns/parse';
-import format from 'date-fns/format'; import getDay from 'date-fns/getDay';
-  import { Bar } from 'react-chartjs-2';
+import Slider from 'react-slick';
+import parse from 'date-fns/parse'; import format from 'date-fns/format'
+  import getDay from 'date-fns/getDay';
+import { Bar } from 'react-chartjs-2';
+import "slick-carousel/slick/slick.css";
 import enUS from 'date-fns/locale/en-US';
+import "slick-carousel/slick/slick-theme.css";
 import startOfWeek from 'date-fns/startOfWeek';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { React, Suspense, useState, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import { React, useMemo, Suspense, useState,useEffect } from 'react';
+
 
 import { Email as EmailIcon, Message as MessageIcon } from '@mui/icons-material';
 import {
@@ -34,8 +38,10 @@ import {
 
 import Account from 'src/_mock/account';
 import { user_api, enquiry_api } from 'src/services/userapi';
+ 
+import AppWidgetSummary from '../app-widget-summary';
 
-import AppWidgetSummary from '../user/components/app-widget-summary';
+;
 
 
 // ----------------------------------------------------------------------
@@ -867,22 +873,61 @@ function CourseManagement () {
   function MentorProgress() {
     const [mentees, setMentees] = useState([]);
     const [loading, setLoading] = useState(true);
-  
+    const [searchQuery, setSearchQuery] = useState('');
+    
     useEffect(() => {
+      const fetchMenteesData = async () => {
+        try {
+          const response = await axios.get('https://mocki.io/v1/7f9fbf74-a417-41f3-916a-b40a6b26c217'); // Replace with your API endpoint
+          setMentees(response.data); // Assuming mentees data is an array of objects
+          setLoading(false);
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error fetching mentees data:', error);
+          setLoading(false);
+        }
+      };
+  
       fetchMenteesData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   
-    const fetchMenteesData = async () => {
-      try {
-        const response = await axios.get('https://mocki.io/v1/7f9fbf74-a417-41f3-916a-b40a6b26c217'); // Replace with your API endpoint
-        setMentees(response.data); // Assuming mentees data is an array of objects
-        setLoading(false);
-        console.log(mentees)
-      } catch (error) {
-        console.error('Error fetching mentees data:', error);
-        setLoading(false);
-      }
+    const handleSearchChange = (event) => {
+      setSearchQuery(event.target.value);
+    };
+  
+    const filteredMentees = useMemo(() => 
+      mentees.filter(mentee => mentee.name.toLowerCase().includes(searchQuery.toLowerCase())), 
+      [mentees, searchQuery]
+    );
+  
+    const settings = {
+      infinite: true,
+      focusOnSelect: true,
+      dots: true,
+      speed: 500,
+      slidesToShow: 2,
+      slidesToScroll: 1,
+      swipeToSlide: true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true,
+            dots: true
+          }
+        },
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            infinite: true,
+            dots: true
+          }
+        }
+      ]
     };
   
     if (loading) {
@@ -901,82 +946,93 @@ function CourseManagement () {
           </Typography>
           <Divider />
         </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Search by name"
+            variant="outlined"
+            fullWidth
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </Grid> 
   
-        {mentees.map((mentee) => (
-          <Grid item xs={12} md={6} lg={4} key={mentee.id}>
-            <Paper sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" mb={2}>
-                <Avatar alt={mentee.name} src={mentee.profilePicture} sx={{ mr: 2 }} />
-                <Typography variant="h6">{mentee.name}</Typography>
-              </Box>
-              <Typography variant="body1" gutterBottom>
-                <strong>Contact:</strong> {mentee.contact}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Current Course:</strong> {mentee.currentCourse}
-              </Typography>
-  
-              {/* Progress in Courses */}
-              <Typography variant="body1" gutterBottom>
-                <strong>Course Progress:</strong>
-              </Typography>
-              {mentee.courses.map((course) => (
-                <Box key={course.id} mb={2}>
-                  <Typography variant="body2">{course.title}</Typography>
-                  <LinearProgress variant="determinate" value={course.progress} />
-                </Box>
-              ))}
-  
-              {/* Attendance Tracking */}
-              <Typography variant="body1" gutterBottom>
-                <strong>Attendance:</strong>
-              </Typography>
-              <Box mb={2}>
-                <Bar
-                  data={{
-                    labels: mentee.attendance.map((entry) => entry.date),
-                    datasets: [
-                      {
-                        label: 'Attendance',
-                        data: mentee.attendance.map((entry) => entry.present ? 1 : 0),
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                      },
-                    ],
-                  }}
-                  options={{
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        max: 1,
-                        ticks: {
-                          callback: (value) => value === 1 ? 'Present' : 'Absent',
+        <Grid item xs={12}>
+          <Slider {...settings}>
+            {filteredMentees.map((mentee) => (
+              <div key={mentee.id}>
+                <Paper sx={{ p: 2, mx: 1, height:20 }}>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <Avatar alt={mentee.name} src={mentee.profilePicture} sx={{ mr: 2 }} />
+                    <Typography variant="h6">{mentee.name}</Typography>
+                  </Box>
+                  <Typography variant="body1" gutterBottom>
+                    <strong>Contact:</strong> {mentee.contact}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    <strong>Current Course:</strong> {mentee.currentCourse}
+                  </Typography>
+        
+                  <Typography variant="body1" gutterBottom>
+                    <strong>Course Progress:</strong>
+                  </Typography>
+                  {mentee.courses.map((course) => (
+                    <Box key={course.id} mb={2}>
+                      <Typography variant="body2">{course.title}</Typography>
+                      <LinearProgress variant="determinate" value={course.progress} />
+                    </Box>
+                  ))}
+        
+                  <Typography variant="body1" gutterBottom>
+                    <strong>Attendance:</strong>
+                  </Typography>
+                  <Box mb={2}>
+                    <Bar
+                      data={{
+                        labels: mentee.attendance.map((entry) => entry.date),
+                        datasets: [
+                          {
+                            label: 'Attendance',
+                            data: mentee.attendance.map((entry) => entry.present ? 1 : 0),
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                          },
+                        ],
+                      }}
+                      options={{
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            max: 1,
+                            ticks: {
+                              callback: (value) => value === 1 ? 'Present' : 'Absent',
+                            },
+                          },
                         },
-                      },
-                    },
-                  }}
-                />
-              </Box>
-  
-              {/* Grades and Performance */}
-              <Typography variant="body1" gutterBottom>
-                <strong>Grades and Performance:</strong>
-              </Typography>
-              <List>
-                {mentee.grades.map((grade) => (
-                  <ListItem key={grade.assignmentId}>
-                    <ListItemText
-                      primary={grade.assignmentTitle}
-                      secondary={`Grade: ${grade.grade}`}
+                      }}
                     />
-                  </ListItem>
-                ))}
-              </List>
-            </Paper>
-          </Grid>
-        ))}
+                  </Box>
+        
+                  <Typography variant="body1" gutterBottom>
+                    <strong>Grades and Performance:</strong>
+                  </Typography>
+                  <List>
+                    {mentee.grades.map((grade) => (
+                      <ListItem key={grade.assignmentId}>
+                        <ListItemText
+                          primary={grade.assignmentTitle}
+                          secondary={`Grade: ${grade.grade}`}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </div>
+            ))}
+          </Slider>
+        </Grid>
       </Grid>
     );
-  };
+  }
+    
 
 
   // let mockdata = [
@@ -1165,7 +1221,8 @@ function CourseManagement () {
     getDay,
     locales,
   });
-  
+
+
   function ScheduleManagement (){
     const [scheduleData, setScheduleData] = useState([]);
   

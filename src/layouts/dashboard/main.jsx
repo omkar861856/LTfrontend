@@ -15,6 +15,7 @@ export default function Main({ children, sx, ...other }) {
 
   return (
     <Box
+    className='layout-main'
       component="main"
       sx={{
         flexGrow: 1,

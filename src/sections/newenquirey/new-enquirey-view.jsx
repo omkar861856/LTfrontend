@@ -18,7 +18,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 
-const backendUrl = "https://qrform-ltbackend.vercel.app";
+const backendUrl = "https://ltbackend2.vercel.app";
 
 // todays date
 
