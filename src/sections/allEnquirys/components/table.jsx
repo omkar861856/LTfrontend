@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridToolbar, useGridApiRef } from '@mui/x-data-grid';
 
-import { user_api } from 'src/services/userapi';
+import { enquiry_api } from 'src/services/userapi';
 
 import ContactModal from './modal';
 
@@ -53,7 +53,7 @@ export default function EnquiryTable() {
   async function feedData() {
   try {
     setLoading(true);
-    const response = await axios.get(`${user_api}/allenquirys`);
+    const response = await axios.get(`${enquiry_api}/allenquirys`);
     const {data} = response;
     if (data.length === 0) {
       noEnquirys();

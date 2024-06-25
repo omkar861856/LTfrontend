@@ -228,7 +228,7 @@ const ContactModal = ({ open, handleClose, contactData }) => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Typography variant="body1">
-              <strong>Created On:</strong> {new Date(contactData.createdOn).toLocaleString()}
+              <strong>Created On:</strong> {new Date(contactData.creationDate).toLocaleString()}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -393,7 +393,7 @@ ContactModal.propTypes = {
     altContact: PropTypes.string,
     preferredLocation: PropTypes.string,
     qualification: PropTypes.string,
-    createdOn: PropTypes.instanceOf(Date),
+    creationDate: PropTypes.instanceOf(Date),
     course: PropTypes.string,
     isEmployed: PropTypes.bool,
     organisation: PropTypes.string,

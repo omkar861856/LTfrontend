@@ -1,17 +1,17 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { alpha } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import axios from 'axios';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -67,22 +67,6 @@ export default function AccountPopover() {
   const router = useRouter();
 
   const handleSignOut = () => {
-    // Make a POST request with JSON data
-    dispatch(
-      signOut({
-        name: '',
-        photoURL: '',
-        role: 'none',
-        token: '',
-        login:'',
-        logout:'',
-        login_location: '',
-        loginDay: '',
-        loginTime: '',
-        logoutTime: '',
-        logoutDay: '',
-      })
-    );
     (async () => {
       const url = `${user_api}/signout`;
       const signoutaxios = await axios
@@ -90,16 +74,34 @@ export default function AccountPopover() {
           email: user.email,
           login: user.login,
         })
-        .then((response) => {          
+        .then((response) => {
           if (response.data.msg === 'Logout time recorded successfully') {
-            router.push('/');
+            dispatch(
+              signOut({
+                name: '',
+                photoURL: '',
+                role: 'none',
+                token: '',
+                login: '',
+                logout: '',
+                login_location: '',
+                loginDay: '',
+                loginTime: '',
+                logoutTime: '',
+                logoutDay: '',
+              })
+            );
           } else {
             alert(response.data);
           }
         })
-        .catch((error) => alert(error, 'error block activated'));
+        .catch((error) => alert(error, 'error block activated'))
+        .finally(() => {
+          router.push('/');
+        });
     })();
 
+    // modal handle close
     handleClose();
   };
 

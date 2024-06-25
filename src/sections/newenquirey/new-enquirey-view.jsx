@@ -15,10 +15,12 @@ import RadioGroup from "@mui/material/RadioGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { enquiry_api } from "src/services/userapi";
+
 
 // ----------------------------------------------------------------------
 
-const backendUrl = "https://ltbackend2.vercel.app";
+const backendUrl = enquiry_api;
 
 // todays date
 
@@ -64,6 +66,12 @@ const validationSchema = yup.object().shape({
   aboutUs: yup.string().label("This"),
   isEmployed:yup.bool().label("This").required(),
   isFresher:yup.bool().label("This").required(),
+  preferredLocation: yup.string()
+  .oneOf(['btm', 'marathahalli', 'online'])
+  .required('You must select an option'),
+  preferredBatch: yup.string()
+  .oneOf(['weekdays', 'weekends'])
+  .required('You must select an option'),  
 });
 
 const RenderForm = () => {
@@ -83,10 +91,10 @@ const RenderForm = () => {
       course: "",
       organisation: "",
       aboutUs: "",
-      isEmployed: null,
+      isEmployed: "",
       branch: "",
       preferredLocation: "",
-      isFresher: null,
+      isFresher: "",
       preferredBatch: "",
     },
     validationSchema,
@@ -108,10 +116,9 @@ const RenderForm = () => {
             creationDate: today,
           })
           .then((response) => {
-            resetForm();
-            if (response.data.msg === "Enquirey registered") {
+            window.location.reload()
+            if (response.data.msg === "Enquiry registered") {
               alert(response.data.msg);
-
               setLoading(false);
             }
           })

@@ -12,7 +12,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { React, useMemo, Suspense, useState,useEffect } from 'react';
 
-
 import { Email as EmailIcon, Message as MessageIcon } from '@mui/icons-material';
 import {
     Box,

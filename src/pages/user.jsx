@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import UserViewFinal from 'src/sections/overview/user/view/user-view';
+import UserViewFinal from 'src/sections/overview/view/app-view';
 // ------------------providing metadata----------------------------------------------------
 
 export default function UserPage() {

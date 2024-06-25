@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch , useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -39,22 +39,23 @@ const validationSchema = yup.object().shape({
   email: yup.string().label('This').required().email(),
 
   password: yup.string().label('Password').required(),
+  login_location: yup
+    .string()
+    .oneOf(['marathahalli', 'btm', 'wfh'])
+    .required('You must select an option'),
 });
 
 const RenderForm = () => {
-
   const dispatch = useDispatch();
-  const router = useRouter()
-
-
+  const router = useRouter();
 
   const timeObj = new Date().toLocaleTimeString(undefined, {
-    timeZone: "Asia/Kolkata",
-  });;
+    timeZone: 'Asia/Kolkata',
+  });
 
   const dayObj = new Date().toLocaleDateString(undefined, {
-    timeZone: "Asia/Kolkata",
-  });;
+    timeZone: 'Asia/Kolkata',
+  });
   // const month = timeObj.getUTCMonth() + 1; // months from 1-12
   // const day = timeObj.getUTCDate();
   // const year = timeObj.getUTCFullYear();
@@ -75,17 +76,17 @@ const RenderForm = () => {
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
-      const { email, password, login_location} = values;
+      const { email, password, login_location } = values;
       setBackendResponse(null);
       setTimeout(() => {
         //   alert(JSON.stringify({email:email,password:password}, null, 2));
         setLoading(true);
         setSubmitting(false);
       }, 0);
-      ( async () => {
+      (async () => {
         const url = `${backendUrl}/signin`;
-        
-           await axios
+
+        await axios
           .post(url, {
             email,
             password,
@@ -95,14 +96,14 @@ const RenderForm = () => {
             loginTime: timeObj,
           })
           .then((response) => {
-            resetForm();            
+            resetForm();
             if (response.data.msg === 'Logged in') {
               setBackendResponse(response.data.msg);
               dispatch(
                 signIn({
                   email,
                   login,
-                  logout:'not yet',
+                  logout: 'not yet',
                   login_location,
                   name: response.data.name,
                   loginDay: dayObj,
@@ -110,14 +111,14 @@ const RenderForm = () => {
                   token: response.data.token,
                   role: response.data.role,
                 })
-              )
-              console.log(response)
+              );
+              console.log(response);
               router.push('/dashboard');
-              setLoading(false);                               
-            }else{
+              setLoading(false);
+            } else {
               resetForm();
-              setBackendResponse(response.data.msg)
-              setLoading(!loading)
+              setBackendResponse(response.data.msg);
+              setLoading(!loading);
             }
           })
           .catch((error) => {
@@ -130,7 +131,7 @@ const RenderForm = () => {
   });
 
   return (
-    <div>      
+    <div>
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3} mb={3}>
           <TextField
@@ -229,10 +230,8 @@ export default function LoginView() {
 
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
-
   // Must use destructuring router assignmenteslint
-  const router = useRouter()
-
+  const router = useRouter();
 
   return (
     <Box
