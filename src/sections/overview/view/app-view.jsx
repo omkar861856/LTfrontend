@@ -12,6 +12,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { React, useMemo, Suspense, useState,useEffect } from 'react';
 
+import { DataGrid } from '@mui/x-data-grid';
 import { Email as EmailIcon, Message as MessageIcon } from '@mui/icons-material';
 import {
     Box,
@@ -73,15 +74,17 @@ function AdminView() {
   const [students, setStudents] = useState([]);
   const [admins, setAdmins] = useState([]);
 
+ 
+
   useEffect(() => {
     Promise.all([fetch(`${user_api}/allusers`), fetch(`${enquiry_api}/allenquirys`)])
       .then(([resUsers, resEnquirys]) => Promise.all([resUsers.json(), resEnquirys.json()]))
       .then(([dataUsers, dataEnquirys]) => {
-        setUsers(dataUsers.usersdb);
+        setUsers(dataUsers.users);
         setEnquirys(dataEnquirys.enquirydb);
-        const a1 = dataUsers.usersdb.filter((user) => user.role === 'student');
-        const a2 = dataUsers.usersdb.filter((user) => user.role === 'mentor');
-        const a3 = dataUsers.usersdb.filter((user) => user.role === 'admin');
+        const a1 = dataUsers.users.filter((user) => user.role === 'student');
+        const a2 = dataUsers.users.filter((user) => user.role === 'mentor');
+        const a3 = dataUsers.users.filter((user) => user.role === 'admin');
 
         setMentors(a2);
         setAdmins(a3);
@@ -91,6 +94,27 @@ function AdminView() {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const columns = [
+    { field: 'name', headerName: 'Name', width: 150 },
+    { field: 'role', headerName: 'Role', width: 150 },
+    { field: 'createdAtDay', headerName: 'Created At', width: 150, type: 'date' },
+    { field: 'attendance', headerName: 'Attendance', width: 150, type: 'array' },    
+    { field: 'holidays', headerName: 'Holidays', width: 150, type: 'array' },
+    { field: 'leaves', headerName: 'Leaves', width: 150, type: 'array' },
+];
+
+console.log(users)
+
+
+const rows = users.map((user, index) => ({
+    id: index + 1,
+    ...user,  
+    leaves: user.leaves.length,
+    holidays: user.holidays.length, 
+    attendance: user.attendance.length,
+    createdAtDay: new Date(user.createdAtDay)
+}));
 
   return (
     <Container maxWidth="xl" >
@@ -146,6 +170,14 @@ function AdminView() {
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
           />
+        </Grid>
+
+        <Grid xs={12} sm={12} md={12}>
+
+        <Box sx={{ height: 400, width: '100%' }}>
+            <DataGrid rows={rows} columns={columns} pageSize={5} />
+        </Box>
+          
         </Grid>
       </Grid>
     </Container>

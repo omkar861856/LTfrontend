@@ -1,26 +1,35 @@
+// store.js
 import {thunk} from 'redux-thunk';
 import storage from 'redux-persist/lib/storage';
-import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from 'redux-persist';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { FLUSH, PAUSE, PURGE, PERSIST, REGISTER, REHYDRATE } from 'redux-persist/es/constants'; // Import constants from redux-persist
 
-import userReduce from "./slices/userSlice";
+import userReducer from './slices/userSlice';
+import environmentReducer from './slices/environmentSlice';
+
+const rootReducer = combineReducers({
+  environment: environmentReducer,
+  user: userReducer, // Make sure userReducer is correctly imported and used here
+});
 
 const persistConfig = {
   key: 'root',
   storage,
-}
+};
 
-const persistedReducer = persistReducer(persistConfig, userReduce)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
+      },
+    }).concat(thunk),
+});
 
-export const store =  configureStore({
-  //  enhanced reducer with configuration to persist the userReducer state to local storage.
-  reducer: persistedReducer,  
-  //  Thunk middleware, which will intercept and stop non-serializable values in action before they get to the reducer
-  middleware: ()=>[thunk]
+const persistor = persistStore(store);
 
-})
-
-//  function that persists and rehydrates the state
-
-export const persistor = persistStore(store)
+export { store, persistor };

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialUserState = {
+const initialState = {
   user: {
     name: '',
     photoURL: '',
@@ -19,7 +19,7 @@ const initialUserState = {
 
 const userSlice = createSlice({
   name: 'userSlice',
-  initialUserState,
+  initialState,
   reducers: {
     signIn: (state, action) => {
       state.user = { ...state.user, ...action.payload };
@@ -30,7 +30,7 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
     },
     updateUser: (state, action) => {
-      state.user = { name: action.name, photoURL: action.photoURL };
+      state.user = { ...state.user, name: action.payload.name ,photoURL: action.payload.photoURL };
     },
   },
 });

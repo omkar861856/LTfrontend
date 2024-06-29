@@ -2,8 +2,8 @@ import axios from 'axios';
 import * as yup from 'yup';
 import { useState } from 'react';
 import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -102,9 +102,10 @@ const RenderForm = () => {
               dispatch(
                 signIn({
                   email,
-                  login,
+                  login: response.data.createdAt,
                   logout: 'not yet',
                   login_location,
+                  photoURL: response.data.photoURL,
                   name: response.data.name,
                   loginDay: dayObj,
                   loginTime: timeObj,
@@ -227,8 +228,6 @@ const RenderForm = () => {
 
 export default function LoginView() {
   const theme = useTheme();
-
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
 
   // Must use destructuring router assignmenteslint
   const router = useRouter();

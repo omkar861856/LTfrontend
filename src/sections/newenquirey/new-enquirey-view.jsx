@@ -1,22 +1,21 @@
-import axios from "axios";
-import * as yup from "yup";
-import { useState } from "react";
-import { useFormik , FormikProvider } from "formik";
+import axios from 'axios';
+import * as yup from 'yup';
+import { useState } from 'react';
+import { useFormik, FormikProvider } from 'formik';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Radio from "@mui/material/Radio";
-import TextField from "@mui/material/TextField";
-import FormLabel from "@mui/material/FormLabel";
-import Typography from "@mui/material/Typography";
-import RadioGroup from "@mui/material/RadioGroup";
-import LoadingButton from "@mui/lab/LoadingButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Radio from '@mui/material/Radio';
+import TextField from '@mui/material/TextField';
+import FormLabel from '@mui/material/FormLabel';
+import Typography from '@mui/material/Typography';
+import RadioGroup from '@mui/material/RadioGroup';
+import LoadingButton from '@mui/lab/LoadingButton';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { enquiry_api } from "src/services/userapi";
-
+import { enquiry_api } from 'src/services/userapi';
 
 // ----------------------------------------------------------------------
 
@@ -37,16 +36,16 @@ const yyyy = today.getFullYear();
 
 // Add leading zero if the day is less than 10
 if (dd < 10) {
-  dd = `0${  dd}`;
+  dd = `0${dd}`;
 }
 
 // Add leading zero if the month is less than 10
 if (mm < 10) {
-  mm = `0${  mm}`;
+  mm = `0${mm}`;
 }
 
 // Format the date as dd/mm/yyyy and log it
-const today_now = `${dd  }/${  mm  }/${  yyyy}`;
+const today_now = `${dd}/${mm}/${yyyy}`;
 
 // ================= validation schema
 
@@ -54,48 +53,48 @@ const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const validationSchema = yup.object().shape({
-  name: yup.string().label("This").required(),
-  location: yup.string().label("This").required(),
-  contact: yup.string().matches(phoneRegExp, "Phone number is not valid").required(),
-  altnumber: yup.string().matches(phoneRegExp, "Phone number is not valid"),
-  email: yup.string().label("This").required().email(),
-  qualification: yup.string().label("This").required(),
-  branch: yup.string().label("This").required(),
-  course: yup.string().label("This").required(),
-  employed: yup.string().label("This"),
-  aboutUs: yup.string().label("This"),
-  isEmployed:yup.bool().label("This").required(),
-  isFresher:yup.bool().label("This").required(),
-  preferredLocation: yup.string()
-  .oneOf(['btm', 'marathahalli', 'online'])
-  .required('You must select an option'),
-  preferredBatch: yup.string()
-  .oneOf(['weekdays', 'weekends'])
-  .required('You must select an option'),  
+  name: yup.string().label('This').required(),
+  location: yup.string().label('This').required(),
+  contact: yup.string().matches(phoneRegExp, 'Phone number is not valid').required(),
+  altnumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  email: yup.string().label('This').required().email(),
+  qualification: yup.string().label('This').required(),
+  branch: yup.string().label('This').required(),
+  course: yup.string().label('This').required(),
+  employed: yup.string().label('This'),
+  aboutUs: yup.string().label('This'),
+  isEmployed: yup.bool().label('This').required(),
+  isFresher: yup.bool().label('This').required(),
+  preferredLocation: yup
+    .string()
+    .oneOf(['btm', 'marathahalli', 'online'])
+    .required('You must select an option'),
+  preferredBatch: yup
+    .string()
+    .oneOf(['weekdays', 'weekends'])
+    .required('You must select an option'),
 });
 
 const RenderForm = () => {
   const [backendResponse, setBackendResponse] = useState();
   const [loading, setLoading] = useState(false);
 
-
-
   const formik = useFormik({
     initialValues: {
-      name: "",
-      location: "",
-      contact: "",
-      altContact: "",
-      email: "",
-      qualification: "",
-      course: "",
-      organisation: "",
-      aboutUs: "",
-      isEmployed: "",
-      branch: "",
-      preferredLocation: "",
-      isFresher: "",
-      preferredBatch: "",
+      name: '',
+      location: '',
+      contact: '',
+      altContact: '',
+      email: '',
+      qualification: '',
+      course: '',
+      organisation: '',
+      aboutUs: '',
+      isEmployed: '',
+      branch: '',
+      preferredLocation: '',
+      isFresher: '',
+      preferredBatch: '',
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, resetForm }) => {
@@ -116,8 +115,8 @@ const RenderForm = () => {
             creationDate: today,
           })
           .then((response) => {
-            window.location.reload()
-            if (response.data.msg === "Enquiry registered") {
+            window.location.reload();
+            if (response.data.msg === 'Enquiry registered') {
               alert(response.data.msg);
               setLoading(false);
             }
@@ -125,7 +124,7 @@ const RenderForm = () => {
           .catch((error) => {
             resetForm();
             alert(error);
-            setBackendResponse("User not found");
+            setBackendResponse('User not found');
           });
       })();
       // alert(JSON.stringify({email,password, login_location}, null, 2));
@@ -153,7 +152,7 @@ const RenderForm = () => {
               </div> */}
 
             <TextField
-             required
+              required
               fullWidth
               id="name"
               name="name"
@@ -165,7 +164,7 @@ const RenderForm = () => {
               helpertext={formik.touched.name && formik.errors.name}
             />
             <TextField
-             required
+              required
               fullWidth
               id="location"
               name="location"
@@ -176,24 +175,20 @@ const RenderForm = () => {
               error={formik.touched.location && Boolean(formik.errors.location)}
               helpertext={formik.touched.location && formik.errors.location}
             />
-            <FormLabel id="demo-radio-buttons-group-label">
-              Are you a Fresher?*
-            </FormLabel>
-            <RadioGroup                            
+            <FormLabel id="demo-radio-buttons-group-label">Are you a Fresher?*</FormLabel>
+            <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue={null}
               name="isFresher"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.isFresher && Boolean(formik.errors.isFresher)
-              }
+              error={formik.touched.isFresher && Boolean(formik.errors.isFresher)}
               helpertext={formik.touched.isFresher && formik.errors.isFresher}
             >
-              <FormControlLabel value control={<Radio required/>} label="Yes" />
+              <FormControlLabel value control={<Radio required />} label="Yes" />
               <FormControlLabel value={false} control={<Radio required />} label="No" />
-            </RadioGroup>            
+            </RadioGroup>
             <TextField
               fullWidth
               required
@@ -214,9 +209,7 @@ const RenderForm = () => {
               value={formik.values.altContact}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.altContact && Boolean(formik.errors.altContact)
-              }
+              error={formik.touched.altContact && Boolean(formik.errors.altContact)}
               helpertext={formik.touched.altContact && formik.errors.altContact}
             />
             <TextField
@@ -231,9 +224,7 @@ const RenderForm = () => {
               error={formik.touched.email && Boolean(formik.errors.email)}
               helpertext={formik.touched.email && formik.errors.email}
             />
-            <FormLabel id="demo-radio-buttons-group-label">
-              Preferred Location*
-            </FormLabel>
+            <FormLabel id="demo-radio-buttons-group-label">Preferred Location*</FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"
@@ -241,29 +232,19 @@ const RenderForm = () => {
               name="preferredLocation"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.preferredLocation &&
-                Boolean(formik.errors.preferredLocation)
-              }
-              helpertext={
-                formik.touched.preferredLocation &&
-                formik.errors.preferredLocation
-              }
+              error={formik.touched.preferredLocation && Boolean(formik.errors.preferredLocation)}
+              helpertext={formik.touched.preferredLocation && formik.errors.preferredLocation}
             >
-              <FormControlLabel value="btm" control={<Radio required/>} label="Btm" />
+              <FormControlLabel value="btm" control={<Radio required />} label="Btm" />
               <FormControlLabel
                 value="marathahalli"
-                control={<Radio required/>}
+                control={<Radio required />}
                 label="Marathahalli"
               />
-              <FormControlLabel
-                value="online"
-                control={<Radio required/>}
-                label="Online"
-              />
+              <FormControlLabel value="online" control={<Radio required />} label="Online" />
             </RadioGroup>
             <TextField
-            required
+              required
               fullWidth
               id="qualification"
               name="qualification"
@@ -271,29 +252,24 @@ const RenderForm = () => {
               value={formik.values.qualification}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.qualification &&
-                Boolean(formik.errors.qualification)
-              }
-              helpertext={
-                formik.touched.qualification && formik.errors.qualification
-              }
+              error={formik.touched.qualification && Boolean(formik.errors.qualification)}
+              helpertext={formik.touched.qualification && formik.errors.qualification}
             />
+
             <TextField
               fullWidth
               required
-              id="course"
-              name="course"
-              label="Course"
-              value={formik.values.course}
+              id="branch"
+              name="branch"
+              label="Branch"
+              value={formik.values.branch}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.course && Boolean(formik.errors.course)}
-              helpertext={formik.touched.course && formik.errors.course}
+              error={formik.touched.branch && Boolean(formik.errors.branch)}
+              helpertext={formik.touched.branch && formik.errors.branch}
             />
-            <FormLabel id="demo-radio-buttons-group-label">
-              Are you Employed?*
-            </FormLabel>
+
+            <FormLabel id="demo-radio-buttons-group-label">Are you Employed?*</FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"
@@ -301,15 +277,13 @@ const RenderForm = () => {
               name="isEmployed"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.isEmployed && Boolean(formik.errors.isEmployed)
-              }
+              error={formik.touched.isEmployed && Boolean(formik.errors.isEmployed)}
               helpertext={formik.touched.isEmployed && formik.errors.isEmployed}
             >
-              <FormControlLabel value control={<Radio required/>} label="Yes" />
-              <FormControlLabel value={false} control={<Radio required/>} label="No" />
-            </RadioGroup>            
-            {formik.values.isEmployed === "true" ? (
+              <FormControlLabel value control={<Radio required />} label="Yes" />
+              <FormControlLabel value={false} control={<Radio required />} label="No" />
+            </RadioGroup>
+            {formik.values.isEmployed === 'true' ? (
               <TextField
                 fullWidth
                 required
@@ -319,13 +293,8 @@ const RenderForm = () => {
                 value={formik.values.organisation}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.organisation &&
-                  Boolean(formik.errors.organisation)
-                }
-                helpertext={
-                  formik.touched.organisation && formik.errors.organisation
-                }
+                error={formik.touched.organisation && Boolean(formik.errors.organisation)}
+                helpertext={formik.touched.organisation && formik.errors.organisation}
               />
             ) : null}
 
@@ -344,19 +313,17 @@ const RenderForm = () => {
             <TextField
               fullWidth
               required
-              id="branch"
-              name="branch"
-              label="Branch"
-              value={formik.values.branch}
+              id="course"
+              name="course"
+              label="Course"
+              value={formik.values.course}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.branch && Boolean(formik.errors.branch)}
-              helpertext={formik.touched.branch && formik.errors.branch}
+              error={formik.touched.course && Boolean(formik.errors.course)}
+              helpertext={formik.touched.course && formik.errors.course}
             />
 
-            <FormLabel id="demo-radio-buttons-group-label">
-              Preferred Batch*
-            </FormLabel>
+            <FormLabel id="demo-radio-buttons-group-label">Preferred Batch*</FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"
@@ -364,24 +331,11 @@ const RenderForm = () => {
               name="preferredBatch"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.preferredBatch &&
-                Boolean(formik.errors.preferredBatch)
-              }
-              helpertext={
-                formik.touched.preferredBatch && formik.errors.preferredBatch
-              }
+              error={formik.touched.preferredBatch && Boolean(formik.errors.preferredBatch)}
+              helpertext={formik.touched.preferredBatch && formik.errors.preferredBatch}
             >
-              <FormControlLabel
-                value="weekdays"
-                control={<Radio required/>}
-                label="Weekdays"
-              />
-              <FormControlLabel
-                value="weekends"
-                control={<Radio required/>}
-                label="Weekends"
-              />
+              <FormControlLabel value="weekdays" control={<Radio required />} label="Weekdays" />
+              <FormControlLabel value="weekends" control={<Radio required />} label="Weekends" />
             </RadioGroup>
 
             <LoadingButton
@@ -402,7 +356,6 @@ const RenderForm = () => {
 };
 
 export default function NewEnquireyView() {
-  
   return (
     <Box>
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>

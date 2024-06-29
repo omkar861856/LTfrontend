@@ -102,7 +102,7 @@ export default function AccountPopover() {
     })();
 
     // modal handle close
-    handleClose();
+    handleClose();   
   };
 
   const handleOpen = (event) => {
@@ -132,14 +132,15 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL === ''}
-          alt={user?.name}
+          src={user.photoURL}
+          alt={user.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
+          
           {user.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>

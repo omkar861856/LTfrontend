@@ -33,7 +33,7 @@ export default function EnquiryTable() {
     },
   ]);
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState([]);
 
   const handleRowClick = (params) => {
     setMessage(params.row);
@@ -52,6 +52,7 @@ export default function EnquiryTable() {
 
   async function feedData() {
   try {
+    setMessage([])
     setLoading(true);
     const response = await axios.get(`${enquiry_api}/allenquirys`);
     const {data} = response;

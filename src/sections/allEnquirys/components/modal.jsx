@@ -61,22 +61,12 @@ const ContactModal = ({ open, handleClose, contactData }) => {
   const [sortOrder, setSortOrder] = useState('asc');
   const { user } = Account();
 
-  const fetchData = async () => {
-    try {
-      setHistory([]);
-      const response = await axios.get(`${enquiry_api}/enquiry/touch-history`, {
-        params: { email: contactData.email },
-      });
-      setHistory(response.data.history);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactData.email]);
+    setHistory([]);
+    if(open){
+      setHistory(contactData.touchHistory)
+    }
+  }, [open, contactData.touchHistory]);
 
   const handleAddComment = async () => {
     const url = `${enquiry_api}/enquiry/touch`;
@@ -99,7 +89,6 @@ const ContactModal = ({ open, handleClose, contactData }) => {
       const response = await axios.post(url, payload, config);
 
       if (response) {
-        fetchData();
         setComment('');
       }
     } catch (error) {
@@ -155,6 +144,20 @@ const ContactModal = ({ open, handleClose, contactData }) => {
     });
 
   const sortedFilteredReminders = sortReminders(filterReminders(reminders));
+
+  const handleDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const now = new Date();
+
+    // Check if selected date is less than current date
+    if (selectedDate < now) {
+      // If selected date is less than current date, prevent updating state
+      return;
+    }
+
+    // Update state with selected date
+    setReminderDate(e.target.value);
+  };
 
   const {
     register,
@@ -280,12 +283,12 @@ const ContactModal = ({ open, handleClose, contactData }) => {
         </form>
 
         <Typography variant="h6" component="h3" sx={{ mt: 2 }}>
-          History
+          Touch History
         </Typography>
 
         <Box sx={historyStyle}>
           <List>
-            {history.reverse().map((entry, index) => (
+            {(contactData.touchHistory??[]).map((entry, index) => (
               <ListItem key={index}>
                 <ListItemText
                   primary={`${entry.comment}`}
@@ -302,7 +305,7 @@ const ContactModal = ({ open, handleClose, contactData }) => {
         </Box>
 
         <Typography variant="h6" component="h3" sx={{ mt: 2 }}>
-          Reminders
+         Set Reminder
         </Typography>
 
         <Box>
@@ -320,7 +323,7 @@ const ContactModal = ({ open, handleClose, contactData }) => {
             type="datetime-local"
             fullWidth
             value={reminderDate}
-            onChange={(e) => setReminderDate(e.target.value)}
+            onChange={handleDateChange}
             sx={{ mt: 2 }}
             InputLabelProps={{
               shrink: true,
@@ -336,6 +339,10 @@ const ContactModal = ({ open, handleClose, contactData }) => {
             Add Reminder
           </Button>
         </Box>
+
+        <Typography variant="h6" component="h3" sx={{ mt: 2 }}>
+          Reminders
+        </Typography>
 
         <Box display="flex" justifyContent="space-between" sx={{ mt: 2 }}>
           <FormControl>
@@ -398,6 +405,12 @@ ContactModal.propTypes = {
     isEmployed: PropTypes.bool,
     organisation: PropTypes.string,
     aboutUs: PropTypes.string,
+    touchHistory: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+        timestamp: PropTypes.instanceOf(Date).isRequired,
+      })
+    ),
     preferredBatch: PropTypes.string,
     id: PropTypes.string,
     history: PropTypes.arrayOf(

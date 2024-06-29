@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import Loading from 'src/utils/loading-spinner';
+
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
@@ -25,7 +27,7 @@ export function AdminRouter() {
     {
       element: (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
@@ -44,7 +46,7 @@ export function AdminRouter() {
 
           ],
           element: (
-            <Suspense>
+            <Suspense fallback={<Loading />}>
               <Outlet />
             </Suspense>
           ),
@@ -82,7 +84,7 @@ export function StudentRouter() {
     {
       element: (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
@@ -128,7 +130,7 @@ export function MentorRouter() {
     {
       element: (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
