@@ -19,6 +19,7 @@ export const AllEnquiryPage = lazy(() => import('src/pages/all-enquirys'));
 export const UserProfilePage = lazy(() => import('src/pages/user-profile'));
 export const ApplyNowPage = lazy(() => import('src/pages/apply-now'));
 export const CourseLearnMorePage = lazy(() => import('src/pages/courses_learnmore'));
+export const SingleEnquiryPage = lazy(() => import('src/pages/single-enquiry'));
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,18 @@ export function AdminRouter() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'newenquiry', element: <NewEnquireyPage /> },
-        { path: 'allenquirys', element: <AllEnquiryPage /> },
+        {
+          path: 'allenquirys',
+          children: [
+            { element: <AllEnquiryPage />, index: true },
+            { path: 'enquiry/:id', element: <SingleEnquiryPage /> },
+          ],
+          element: (
+            <Suspense fallback={<Loading />}>
+              <Outlet />
+            </Suspense>
+          ),
+        },
         { path: 'user', element: <UserPage /> },
         {
           path: 'courses',
@@ -43,7 +55,6 @@ export function AdminRouter() {
             { element: <ProductsPage />, index: true },
             { path: 'applynow', element: <ApplyNowPage /> },
             { path: 'courselearnmore', element: <CourseLearnMorePage /> },
-
           ],
           element: (
             <Suspense fallback={<Loading />}>

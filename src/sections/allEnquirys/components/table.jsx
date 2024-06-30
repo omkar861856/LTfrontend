@@ -1,13 +1,14 @@
 import axios from 'axios';
 import * as React from 'react';
+import { useDispatch  } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
 
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridToolbar, useGridApiRef } from '@mui/x-data-grid';
 
 import { enquiry_api } from 'src/services/userapi';
-
-import ContactModal from './modal';
+import { feedEnquirys } from 'src/redux/slices/enquirysSlice';
 
 const style = {
   position: 'absolute',
@@ -26,6 +27,8 @@ const style = {
 export default function EnquiryTable() {
   // ----- demo data generator from mui -----
 
+  const dispatch = useDispatch();
+
   const [sortModel, setSortModel] = React.useState([
     {
       field: 'creationDate',
@@ -33,11 +36,14 @@ export default function EnquiryTable() {
     },
   ]);
 
-  const [message, setMessage] = useState([]);
+  const navigate = useNavigate();
+
+  const [id, setId] = useState('');
+
 
   const handleRowClick = (params) => {
-    setMessage(params.row);
-    handleOpenModal();
+    setId(params.row.id);
+    navigate(`/dashboard/allenquirys/enquiry/${params.row.id}`)
   };
 
   const apiRef = useGridApiRef();
@@ -51,23 +57,26 @@ export default function EnquiryTable() {
   // ************* Important data schema *******************
 
   async function feedData() {
-  try {
-    setMessage([])
-    setLoading(true);
-    const response = await axios.get(`${enquiry_api}/allenquirys`);
-    const {data} = response;
-    if (data.length === 0) {
-      noEnquirys();
+    try {
+      setLoading(true);
+      const response = await axios.get(`${enquiry_api}/allenquirys`);
+      const { data } = response;
+      if (data.length === 0) {
+        noEnquirys();
+      }     
+      // alert("update enquiry in redux all") 
+      // dispatch(feedEnquirys(data.enquirydb))
+      console.log(data.enquirydb);
+      setId(data.enquirydb.id);
+      return data.enquirydb;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Handle error appropriately
+      return [];
+    } finally {
+      setLoading(false);
     }
-    return data.enquirydb;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    // Handle error appropriately
-    return []
-  } finally {
-    setLoading(false);    
   }
-}
 
   // important data schema for table MUI
   const [data1, setData1] = useState({
@@ -281,19 +290,8 @@ export default function EnquiryTable() {
       },
     },
   });
+ 
 
-  const [selectedContact, setSelectedContact] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleOpenModal = (contact) => {
-    setSelectedContact(contact);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedContact(null);
-  };
 
   // const data = {
   //   columns: [
@@ -546,6 +544,7 @@ export default function EnquiryTable() {
         ...prevData,
         rows: data,
       }));
+      dispatch(feedEnquirys(data));
       setLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -561,13 +560,14 @@ export default function EnquiryTable() {
         loading={loading}
         // sortModel={sortModel}
         onRowClick={handleRowClick}
+        // onRowDoubleClick={handleRowClick}
         apiRef={apiRef}
         {...data1}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
       />
 
-      <ContactModal open={modalOpen} handleClose={handleCloseModal} contactData={message} />
+      {/* data of each enqury is in message named state */}
     </div>
   );
 }

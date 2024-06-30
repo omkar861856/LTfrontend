@@ -102,7 +102,7 @@ const RenderForm = () => {
               dispatch(
                 signIn({
                   email,
-                  login: response.data.createdAt,
+                  login,
                   logout: 'not yet',
                   login_location,
                   photoURL: response.data.photoURL,
