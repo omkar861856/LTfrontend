@@ -6,6 +6,7 @@ const initialState = {
     photoURL: '',
     login:'',
     logout:'',
+    isLoggedIn:false,
     role: 'none',
     token: '',
     login_location: '',
@@ -23,11 +24,9 @@ const userSlice = createSlice({
   reducers: {
     signIn: (state, action) => {
       state.user = { ...state.user, ...action.payload };
-      state.isLoggedIn = true;
     },
     signOut: (state, action) => {
       state.user = { ...state.user, ...action.payload };
-      state.isLoggedIn = false;
     },
     updateUser: (state, action) => {
       state.user = { ...state.user, name: action.payload.name ,photoURL: action.payload.photoURL };

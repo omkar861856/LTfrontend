@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import RadioGroup from '@mui/material/RadioGroup';
 import LoadingButton from '@mui/lab/LoadingButton';
+import FormControl from '@mui/material/FormControl';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -39,10 +40,8 @@ const validationSchema = yup.object().shape({
   email: yup.string().label('This').required().email(),
 
   password: yup.string().label('Password').required(),
-  login_location: yup
-    .string()
-    .oneOf(['marathahalli', 'btm', 'wfh'])
-    .required('You must select an option'),
+  login_location: yup.string().required('Login location is required'), // Validation for radio group
+
 });
 
 const RenderForm = () => {
@@ -65,7 +64,7 @@ const RenderForm = () => {
   const [loading, setLoading] = useState(false);
   const [backendResponse, setBackendResponse] = useState('');
 
-  const login = new Date();
+  
 
   const formik = useFormik({
     initialValues: {
@@ -85,11 +84,12 @@ const RenderForm = () => {
       }, 0);
       (async () => {
         const url = `${backendUrl}/signin`;
-
+        const login = new Date();
         await axios
           .post(url, {
             email,
             password,
+            isLoggedIn:true,
             login,
             login_location,
             loginDay: dayObj,
@@ -105,6 +105,7 @@ const RenderForm = () => {
                   login,
                   logout: 'not yet',
                   login_location,
+                  isLoggedIn: true,
                   photoURL: response.data.photoURL,
                   name: response.data.name,
                   loginDay: dayObj,
@@ -168,22 +169,24 @@ const RenderForm = () => {
             }}
           />
 
-          <FormLabel id="demo-row-radio-buttons-group-label">Login Location:</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="login_location"
-            value={formik.values.login_location}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.login_location && Boolean(formik.errors.login_location)}
-            helpertext={formik.touched.login_location && formik.errors.login_location}
-          >
-            <FormControlLabel value="btm" control={<Radio />} label="BTM" />
-
-            <FormControlLabel value="marathahalli" control={<Radio />} label="Marathahalli" />
-            <FormControlLabel value="wfh" control={<Radio />} label="WFH" />
-          </RadioGroup>
+           <FormControl component="fieldset" error={formik.touched.login_location && Boolean(formik.errors.login_location)}>
+        <FormLabel id="demo-row-radio-buttons-group-label">Login Location:</FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="login_location"
+          value={formik.values.login_location}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        >
+          <FormControlLabel value="btm" control={<Radio />} label="BTM" />
+          <FormControlLabel value="marathahalli" control={<Radio />} label="Marathahalli" />
+          <FormControlLabel value="wfh" control={<Radio />} label="WFH" />
+        </RadioGroup>
+        {formik.touched.login_location && formik.errors.login_location && (
+          <div>{formik.errors.login_location}</div>
+        )}
+      </FormControl>
 
           {backendResponse !== 'logged in' && loading === false ? (
             <LoadingButton

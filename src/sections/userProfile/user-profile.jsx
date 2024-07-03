@@ -84,7 +84,7 @@ const RenderForm = () => {
                 photoURL: avatar,
               })
             );
-          })
+          }).finally(alert("User updated successfully"))
           .catch((error) => alert(error, 'error block activated'));
         console.log(signupaxios);
       })();

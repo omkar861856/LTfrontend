@@ -65,10 +65,10 @@ export default function EnquiryTable() {
         noEnquirys();
       }     
       // alert("update enquiry in redux all") 
-      // dispatch(feedEnquirys(data.enquirydb))
-      console.log(data.enquirydb);
-      setId(data.enquirydb.id);
-      return data.enquirydb;
+      // dispatch(feedEnquirys(data.enquiries))
+      console.log(data.enquiries);
+      setId(data.enquiries.id);
+      return data.enquiries;
     } catch (error) {
       console.error('Error fetching data:', error);
       // Handle error appropriately

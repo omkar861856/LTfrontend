@@ -55,66 +55,61 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-
   const { user } = Account();
-
   const [openModal, setOpenModal] = useState(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  const dispatch = useDispatch();
-
-  const router = useRouter();
-
-  const handleSignOut = () => {
-    (async () => {
+  const handleSignOut = async () => {
+    try {
       const url = `${user_api}/signout`;
-      const signoutaxios = await axios
-        .post(url, {
-          email: user.email,
-          login: user.login,
-        })
-        .then((response) => {
-          if (response.data.msg === 'Logout time recorded successfully') {
-            dispatch(
-              signOut({
-                name: '',
-                photoURL: '',
-                role: 'none',
-                token: '',
-                login: '',
-                logout: '',
-                login_location: '',
-                loginDay: '',
-                loginTime: '',
-                logoutTime: '',
-                logoutDay: '',
-              })
-            );
-          } else {
-            alert(response.data);
-          }
-        })
-        .catch((error) => alert(error, 'error block activated'))
-        .finally(() => {
-          router.push('/');
-        });
-    })();
+      const response = await axios.post(url, {
+        email: user.email,
+        login: user.login,
+        isLoggedIn: false,
+      });
 
-    // modal handle close
-    handleClose();   
+      if (response.data.msg === 'Logout time recorded successfully') {
+        await dispatch(
+          signOut({
+            name: '',
+            photoURL: '',
+            role: 'none',
+            token: '',
+            isLoggedIn: false,
+            login: '',
+            logout: '',
+            login_location: '',
+            loginDay: '',
+            loginTime: '',
+            logoutTime: '',
+            logoutDay: '',
+          })
+        );
+        router.push('/');
+      } else {
+        alert(response.data.msg);
+      }
+    } catch (error) {
+      alert(error.message || 'Error logging out');
+    }
   };
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = (path) => {
+  const handleClose = () => {
     setOpen(null);
   };
+
   const handleClick = (path) => {
     router.push(path);
-    setOpen(null);
+    handleClose();
   };
 
   return (
@@ -140,7 +135,6 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          
           {user.name.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
@@ -148,7 +142,6 @@ export default function AccountPopover() {
       <Popover
         open={!!open}
         anchorEl={open}
-        onClick={handleClick}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -183,13 +176,12 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={() => {
-            handleOpenModal();
-          }}
+          onClick={handleOpenModal}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
         </MenuItem>
+
         <Modal
           open={openModal}
           onClose={handleCloseModal}
@@ -198,9 +190,9 @@ export default function AccountPopover() {
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              You wont be able to login today again!!
+              You wont be able to log in again today!
             </Typography>
-            <Button color="error" onClick={() => handleSignOut()}>
+            <Button color="error" onClick={handleSignOut}>
               Sure? Log out
             </Button>
           </Box>

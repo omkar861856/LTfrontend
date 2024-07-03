@@ -81,7 +81,8 @@ function AdminView() {
       .then(([resUsers, resEnquirys]) => Promise.all([resUsers.json(), resEnquirys.json()]))
       .then(([dataUsers, dataEnquirys]) => {
         setUsers(dataUsers.users);
-        setEnquirys(dataEnquirys.enquirydb);
+        console.log(dataEnquirys);
+        setEnquirys(dataEnquirys.enquiries);
         const a1 = dataUsers.users.filter((user) => user.role === 'student');
         const a2 = dataUsers.users.filter((user) => user.role === 'mentor');
         const a3 = dataUsers.users.filter((user) => user.role === 'admin');
