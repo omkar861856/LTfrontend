@@ -1,21 +1,32 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  Box, List, Grid, Input, Button, Select, ListItem, MenuItem,
-  TextField, Pagination, Typography, IconButton, InputLabel, FormControl, ListItemText
+  Box,
+  List,
+  Grid,
+  Button,
+  Select,
+  ListItem,
+  MenuItem,
+  TextField,
+  Pagination,
+  Typography,
+  IconButton,
+  InputLabel,
+  FormControl,
+  ListItemText,
 } from '@mui/material';
-
-import { useSelector } from 'react-redux';
 
 import Account from 'src/_mock/account';
 import { enquiry_api } from 'src/services/userapi';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const pageStyle = {
   p: 4,
@@ -33,31 +44,20 @@ const historyStyle = {
   height: '100%',
 };
 
-const SingleEnquiryView = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [comment, setComment] = useState('');
-  const [history, setHistory] = useState([]);
-  const [type, setType] = useState('');
-  const [reminders, setReminders] = useState([]);
-  const [newReminder, setNewReminder] = useState('');
-  const [reminderDate, setReminderDate] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const { user } = Account(); 
+function HistoryForm({ type, contactData, user, setHistory, setComment, setType, history }) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-  const { enquirys } = useSelector((state) => state.enquirys);
-
-  const contactData = enquirys.find((enq) => enq.id === id);
-  
-
-  const onSubmit = (data) => console.log(data);
-
-  const handleAddComment = async (data) => {
+  const formSubmit = async (data) => {
     const url = `${enquiry_api}/enquiry/touch`;
     const payload = {
       comment: data.comment,
-      type,
+      type: data.type,
       email: contactData.email,
       contact: contactData.contact,
       time: new Date(),
@@ -73,6 +73,7 @@ const SingleEnquiryView = () => {
     try {
       const response = await axios.post(url, payload, config);
       if (response) {
+        alert('got comment response');
         setHistory([...history, response.data.touchHistory]);
         setComment('');
         setType('');
@@ -81,6 +82,70 @@ const SingleEnquiryView = () => {
       console.error('Error adding comment:', error);
     }
   };
+
+  const onSubmit = (data, e) => {
+    formSubmit(data);
+    console.log(data);
+    e.target.reset();
+  };
+
+  // console.log(watch("comment")); // watch input value by passing the name of it
+
+  return (
+    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+    <form style={{ border: '2px solid black' }} onSubmit={handleSubmit(onSubmit)}>
+      <select
+        style={{ border: '2px solid black' }}
+        value={type}
+        {...register('type', { required: true })}
+      >
+        <option value="phone">Phone</option>
+        <option value="email">Email</option>
+      </select>
+      {errors.gender && <span style={{ color: 'red' }}>This field is required</span>}
+      <br />
+
+      {/* register your input into the hook by invoking the "register" function */}
+      <textarea
+        style={{ border: '2px solid black' }}
+        placeholder="Comment"
+        {...register('comment', { required: true })}
+      />
+      {errors.comment && <span style={{ color: 'red' }}>Comment field is required</span>}
+      <br />
+
+      <input
+        style={{
+          border: '2px solid black',
+          padding: '2px',
+          backgroundColor: 'purple',
+          borderRadius: '2px',
+          color: 'white',
+        }}
+        type="submit"
+      />
+    </form>
+  );
+}
+
+const SingleEnquiryView = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [comment, setComment] = useState('');
+  const [history, setHistory] = useState([]);
+  const [type, setType] = useState('');
+  const [reminders, setReminders] = useState([]);
+  const [newReminder, setNewReminder] = useState('');
+  const [reminderDate, setReminderDate] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const { user } = Account();
+
+  const { enquirys } = useSelector((state) => state.enquirys);
+
+  const contactData = enquirys.find((enq) => enq.id === id);
+
+  const onSubmit = (data) => console.log(data);
 
   const handleEmail = (email) => {
     setType('email');
@@ -246,7 +311,15 @@ const SingleEnquiryView = () => {
         </Grid>
       </Grid>
 
-      <h1>form</h1>
+      <HistoryForm
+        type={type}
+        contactData={contactData}
+        setHistory={setHistory}
+        setType={setType}
+        history={history}
+        setComment={setComment}
+        user={user}
+      />
 
       <Typography variant="h6" component="h3" sx={{ mt: 2 }}>
         Touch History
@@ -314,11 +387,7 @@ const SingleEnquiryView = () => {
       <Box display="flex" justifyContent="space-between" sx={{ mt: 2 }}>
         <FormControl>
           <InputLabel id="filter-label">Filter</InputLabel>
-          <Select
-            labelId="filter-label"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
+          <Select labelId="filter-label" value={filter} onChange={(e) => setFilter(e.target.value)}>
             <MenuItem value="all">All</MenuItem>
             <MenuItem value="expired">Expired</MenuItem>
             <MenuItem value="upcoming">Upcoming</MenuItem>
@@ -352,6 +421,28 @@ const SingleEnquiryView = () => {
       </Box>
     </Box>
   );
+};
+
+HistoryForm.propTypes = {
+  type: PropTypes.string.isRequired,
+  contactData: PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    contact: PropTypes.number.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  setHistory: PropTypes.func.isRequired,
+  setComment: PropTypes.func.isRequired,
+  setType: PropTypes.func.isRequired,
+  history: PropTypes.arrayOf(PropTypes.shape({
+    comment: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    contact: PropTypes.number.isRequired,
+    time: PropTypes.instanceOf(Date).isRequired,
+    touchedBy: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default SingleEnquiryView;

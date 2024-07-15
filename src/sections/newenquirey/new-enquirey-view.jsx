@@ -14,8 +14,14 @@ import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { FormHelperText } from '@mui/material';
 
 import { enquiry_api } from 'src/services/userapi';
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 // ----------------------------------------------------------------------
 
@@ -310,7 +316,7 @@ const RenderForm = () => {
               helpertext={formik.touched.aboutUs && formik.errors.aboutUs}
             />
 
-            <TextField
+            {/* <TextField
               fullWidth
               required
               id="course"
@@ -321,7 +327,40 @@ const RenderForm = () => {
               onBlur={formik.handleBlur}
               error={formik.touched.course && Boolean(formik.errors.course)}
               helpertext={formik.touched.course && formik.errors.course}
-            />
+            /> */}
+
+            <FormControl fullWidth error={formik.touched.course && Boolean(formik.errors.course)}>
+              <InputLabel id="course-label">Course</InputLabel>
+              <Select
+                required
+                labelId="course-label"
+                id="course"
+                name="course"
+                value={formik.values.course}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                label="Course"
+              >
+                <MenuItem value="aws">AWS</MenuItem>
+                <MenuItem value="android">Android</MenuItem>
+                <MenuItem value="big data masters program data analytics">
+                  Big Data Masters Program Data Analytics
+                </MenuItem>
+                <MenuItem value="data science python">Data Science Python</MenuItem>
+                <MenuItem value="devops">Devops</MenuItem>
+                <MenuItem value="java">Java</MenuItem>
+                <MenuItem value="javascript">Javascript</MenuItem>
+                <MenuItem value="power bi">Power Bi</MenuItem>
+                <MenuItem value="python">Python</MenuItem>
+                <MenuItem value="react js">React Js</MenuItem>
+                <MenuItem value="software training">Software Training</MenuItem>
+                <MenuItem value="sql">SQL</MenuItem>
+                <MenuItem value="tableau">Tableau</MenuItem>
+              </Select>
+              {formik.touched.course && formik.errors.course ? (
+                <FormHelperText>{formik.errors.course}</FormHelperText>
+              ) : null}
+            </FormControl>
 
             <FormLabel id="demo-radio-buttons-group-label">Preferred Batch*</FormLabel>
             <RadioGroup
